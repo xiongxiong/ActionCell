@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class ActionCell<CellAction: ActionControl where CellAction: CellActionProtocol>: UITableViewCell {
+public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: CellActionProtocol {
     
     // MARK: SwipeCell - 动作设置
     /// Actions - Left
@@ -424,7 +424,7 @@ public class ActionCell<CellAction: ActionControl where CellAction: CellActionPr
     func animateDefaultActionCancelled(completionHandler: (() -> ())? = nil) {
         enableLog ? { print("\(#function)" + "") }() : {}()
         
-        if let side = currentActionSheet?.side {
+        if (currentActionSheet?.side) != nil {
             setActionConstraintsForOpen()
             currentActionSheet?.actions.forEach {
                 if $0 == self.defaultAction {
@@ -511,7 +511,7 @@ public class ActionCell<CellAction: ActionControl where CellAction: CellActionPr
     func animateOpenToClose(_ completionHandler: (() -> ())? = nil) {
         enableLog ? { print("\(#function)" + "") }() : {}()
         
-        if let contentScreenshot = contentScreenshot, let side = currentActionSheet?.side {
+        if let contentScreenshot = contentScreenshot {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForClose()
                 self.setActionConstraintsForClose()
@@ -796,7 +796,7 @@ extension ActionCell: ActionDelegate {
     }
 }
 
-public class ActionSheet<CellAction: ActionControl where CellAction: CellActionProtocol> {
+public class ActionSheet<CellAction: ActionControl> where CellAction: CellActionProtocol {
     var side: ActionSide
     var actions: [CellAction] = []
     
