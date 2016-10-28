@@ -30,13 +30,13 @@ ActionCell, has many functions. I love it.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'ActionCell/**/*'
+  s.source_files = 'Framework/ActionCell/**/*'
 
   # s.resource_bundles = {
   #   'ActionCell' => ['ActionCell/Assets/*.png']
   # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.public_header_files = 'Framework/ActionCell/*.h'
+  s.frameworks = 'UIKit'
   # s.dependency 'AFNetworking', '~> 2.3'
 end

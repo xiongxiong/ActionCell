@@ -1,0 +1,25 @@
+language: swift
+osx_image: xcode8
+xcode_workspace: ActionCell.xcworkspace
+xcode_scheme: ActionCell
+xcode_sdk: iphonesimulator9.3
+env:
+  global:
+  - FRAMEWORK_NAME=ActionCell
+before_install:
+- brew update
+- brew outdated carthage || brew upgrade carthage
+before_script:
+- carthage bootstrap
+before_deploy:
+- carthage build --no-skip-current
+- carthage archive $FRAMEWORK_NAME
+deploy:
+  provider: releases
+  api_key:
+    secure: dlfW+R40flWGNvDQYQ/9pvIbOLFXpCdzcp/3zG4OIyW+3/qw3E2GGiNLUwdDmK+pcxOWQ06R3Vw00qrBaZjMTepgN5EGbPTdUbSBDLGTWh8lZ2ma4t/K+GW88GuU4zzXzhljI/h+lCpb2RMwCgQ1Aek3RXWEIJh03gm7zqqfP3rD/kjzuBQ5Jqaby7C/e1lFrUsu9NL97Unb1zXQa1kVfPpt0mkL3nhi0VUfUNoe/7B5RE32gqJd552QdLDcsKObSuEFdcjsB59H6QeJkvEkkEuWM9+Zb3HA3+r9Oxg/Jrxc/XHXhOFceUQMyzMEQRlN2tOV7NSYyyg7ooJg4PLNyOEc6b4XBzR8HxJwYUDl6Scgx2qUwZymoOSivQ5EC3JhzwnGNaCeols63YM+BfHxfzeG/dE57QTitb3HUqWGFG5/AanOVUG5cthTE+9CH10m4mSEiT/7onyXJZiJeWE5lLytPYIctqszoEXwiW3KAQ9ea8yalDR/HYQ51TeuFhP5TXfbt4s+zLsDIJjrMsFBTYfr/WqmtaNo6SYf+11jp5A0j5XcjY2WrXUgpQcjAu0S4/vQqv2uSTt/mPBNj9tTzRm4PmOaGZu+/hnSzP4+bADB8S9vftfXj/EvCHFUhYt931AAvpv87HkxyaFInXpSEkRkLX0xsnpFzfvvut1TfBo=
+  file: "$FRAMEWORK_NAME.framework.zip"
+  skip_cleanup: true
+  on:
+    repo: xiongxiong/ActionCell
+    branch: master

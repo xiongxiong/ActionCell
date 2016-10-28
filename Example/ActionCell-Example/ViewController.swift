@@ -70,30 +70,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             ]
             return cell
         case 1:
-            let cell = ActionCell<LabelAction>()
+            let cell = ActionCell<TextAction>()
             cell.textLabel?.text = "Both sides have actions"
             cell.animationStyle = .ladder_emergence
             cell.defaultActionIndexLeft = 1
             cell.actionsLeft = [
-                LabelAction(labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
+                TextAction(labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
-                LabelAction(labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
+                TextAction(labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 1 clicked")
                 },
-                LabelAction(labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
+                TextAction(labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
             cell.defaultActionIndexRight = 2
             cell.actionsRight = [
-                LabelAction(labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
+                TextAction(labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
-                LabelAction(labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
+                TextAction(labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 1 clicked")
                 },
-                LabelAction(labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
+                TextAction(labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]

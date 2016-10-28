@@ -129,7 +129,7 @@ extension IconAction: CellActionProtocol {
     }
 }
 
-public class LabelAction: ActionControl {
+public class TextAction: ActionControl {
     
     var labelText: String
     var labelFont: UIFont
@@ -186,7 +186,7 @@ public class LabelAction: ActionControl {
     }
 }
 
-extension LabelAction: CellActionProtocol {
+extension TextAction: CellActionProtocol {
     public func setForeColor(color: UIColor) {
         label.tintColor = color
     }

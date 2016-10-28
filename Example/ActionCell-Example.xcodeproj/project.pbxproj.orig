@@ -14,7 +14,10 @@
 		422E71151D8F56BA00307E3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		422E71201D8F56BA00307E3A /* ActionCell_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E711F1D8F56BA00307E3A /* ActionCell_ExampleTests.swift */; };
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
-		4239FDB91DC24686000E8B69 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4239FDB81DC24686000E8B69 /* ActionCell.framework */; };
+<<<<<<< HEAD
+		422E71521D8F610A00307E3A /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422E71511D8F610A00307E3A /* ActionCell.framework */; };
+=======
+>>>>>>> develop
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +51,10 @@
 		422E71261D8F56BA00307E3A /* ActionCell-ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ActionCell-ExampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell_ExampleUITests.swift; sourceTree = "<group>"; };
 		422E712C1D8F56BA00307E3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4239FDB81DC24686000E8B69 /* ActionCell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActionCell.framework; path = "../../../Library/Developer/Xcode/DerivedData/ActionCell-bfcqdggidopbjeaxzxflzceycqto/Build/Products/Debug-iphonesimulator/ActionCell.framework"; sourceTree = "<group>"; };
+<<<<<<< HEAD
+		422E71511D8F610A00307E3A /* ActionCell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActionCell.framework; path = "../../../Library/Developer/Xcode/DerivedData/ActionCell-bfcqdggidopbjeaxzxflzceycqto/Build/Products/Debug-iphonesimulator/ActionCell.framework"; sourceTree = "<group>"; };
+=======
+>>>>>>> develop
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +62,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4239FDB91DC24686000E8B69 /* ActionCell.framework in Frameworks */,
+<<<<<<< HEAD
+				422E71521D8F610A00307E3A /* ActionCell.framework in Frameworks */,
+=======
+>>>>>>> develop
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +93,7 @@
 				422E711E1D8F56BA00307E3A /* ActionCell-ExampleTests */,
 				422E71291D8F56BA00307E3A /* ActionCell-ExampleUITests */,
 				422E71081D8F56B900307E3A /* Products */,
-				425D68CA1DBC6699006873EB /* Frameworks */,
+				422E71501D8F610A00307E3A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,10 +138,13 @@
 			path = "ActionCell-ExampleUITests";
 			sourceTree = "<group>";
 		};
-		425D68CA1DBC6699006873EB /* Frameworks */ = {
+		422E71501D8F610A00307E3A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4239FDB81DC24686000E8B69 /* ActionCell.framework */,
+<<<<<<< HEAD
+				422E71511D8F610A00307E3A /* ActionCell.framework */,
+=======
+>>>>>>> develop
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -147,7 +159,6 @@
 				422E71031D8F56B900307E3A /* Sources */,
 				422E71041D8F56B900307E3A /* Frameworks */,
 				422E71051D8F56B900307E3A /* Resources */,
-				4239FDBA1DC2468D000E8B69 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -267,23 +278,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		4239FDBA1DC2468D000E8B69 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../Framework/Carthage/Build/iOS/ActionCell.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		422E71031D8F56B900307E3A /* Sources */ = {
