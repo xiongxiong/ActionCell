@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  SwipeCell
+//  ActionCell
 //
 //  Created by xiongxiong on 09/01/2016.
 //  Copyright (c) 2016 xiongxiong. All rights reserved.

@@ -1,6 +1,6 @@
 //
-//  SwipeCell.swift
-//  SwipeCell
+//  ActionCell.swift
+//  ActionCell
 //
 //  Created by 王继荣 on 9/1/16.
 //  Copyright © 2016 CocoaPods. All rights reserved.
@@ -10,7 +10,7 @@ import UIKit
 
 public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: CellActionProtocol {
     
-    // MARK: SwipeCell - 动作设置
+    // MARK: ActionCell - 动作设置
     /// Actions - Left
     public var actionsLeft: [CellAction] {
         get {
@@ -36,7 +36,7 @@ public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAc
         }
     }
     
-    // MARK: SwipeCell - 样式设置
+    // MARK: ActionCell - 样式设置
     /// Action 动画形式
     public var animationStyle: AnimationStyle = .concurrent
     /// The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
@@ -54,7 +54,7 @@ public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAc
     /// Default action's back color
     public var defaultActionBackColor: UIColor? = nil
     
-    // MARK: SwipeCell - 行为设置
+    // MARK: ActionCell - 行为设置
     /// Enable default action to be triggered when the content is panned to far enough
     public var enableDefaultAction: Bool = true
     /// Index of default action - Left
@@ -62,7 +62,7 @@ public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAc
     /// Index of default action - Right
     public var defaultActionIndexRight: Int = 0
     
-    // MARK: SwipeCell - 动画设置
+    // MARK: ActionCell - 动画设置
     /// Spring animation - duration of the animation
     public var animationDuration: TimeInterval = 0.3
     /// Spring animation - delay of the animation
@@ -80,7 +80,7 @@ public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAc
     /// Spring animation - options of the animation
     public var animationOptions: UIViewAnimationOptions = .curveLinear
     
-    // MARK: SwipeCell - 私有属性
+    // MARK: ActionCell - 私有属性
     /// actionSheet - Left
     var actionSheetLeft: ActionSheet = ActionSheet<CellAction>(side: .left)
     /// actionSheet - Right
