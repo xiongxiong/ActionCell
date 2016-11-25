@@ -14,7 +14,7 @@
 		422E71151D8F56BA00307E3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		422E71201D8F56BA00307E3A /* ActionCell_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E711F1D8F56BA00307E3A /* ActionCell_ExampleTests.swift */; };
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
-		4239FDB91DC24686000E8B69 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4239FDB81DC24686000E8B69 /* ActionCell.framework */; };
+		42A230F71DE815F800351DA5 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42A230F61DE815F800351DA5 /* ActionCell.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +49,7 @@
 		422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell_ExampleUITests.swift; sourceTree = "<group>"; };
 		422E712C1D8F56BA00307E3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4239FDB81DC24686000E8B69 /* ActionCell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActionCell.framework; path = "../../../Library/Developer/Xcode/DerivedData/ActionCell-bfcqdggidopbjeaxzxflzceycqto/Build/Products/Debug-iphonesimulator/ActionCell.framework"; sourceTree = "<group>"; };
+		42A230F61DE815F800351DA5 /* ActionCell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActionCell.framework; path = ../Framework/Carthage/Build/iOS/ActionCell.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4239FDB91DC24686000E8B69 /* ActionCell.framework in Frameworks */,
+				42A230F71DE815F800351DA5 /* ActionCell.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +133,7 @@
 		425D68CA1DBC6699006873EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				42A230F61DE815F800351DA5 /* ActionCell.framework */,
 				4239FDB81DC24686000E8B69 /* ActionCell.framework */,
 			);
 			name = Frameworks;
