@@ -1,0 +1,10 @@
+framework module ActionCell {
+  umbrella header "ActionCell.h"
+
+  export *
+  module * { export * }
+}
+
+module ActionCell.Swift {
+    header "ActionCell-Swift.h"
+}
