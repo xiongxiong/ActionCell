@@ -121,23 +121,30 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 #pragma clang diagnostic ignored "-Wproperty-attribute-mismatch"
 #pragma clang diagnostic ignored "-Wduplicate-method-arg"
+@class UIColor;
 @class NSCoder;
 
 SWIFT_CLASS("_TtC10ActionCell13ActionControl")
 @interface ActionControl : UIControl
+- (nonnull instancetype)initWithAction:(NSString * _Nonnull)action foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;
 - (void)removeFromSuperview;
+/**
+  Reset attributes to initial state
+*/
+- (void)refresh;
 - (nonnull instancetype)initWithFrame:(CGRect)frame SWIFT_UNAVAILABLE;
 @end
 
 @class UIImage;
-@class UIColor;
 
 SWIFT_CLASS("_TtC10ActionCell10IconAction")
 @interface IconAction : ActionControl
-- (nonnull instancetype)initWithIconImage:(UIImage * _Nonnull)iconImage iconSize:(CGSize)iconSize foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithAction:(NSString * _Nonnull)action iconImage:(UIImage * _Nonnull)iconImage iconSize:(CGSize)iconSize foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;
 - (void)removeFromSuperview;
+- (void)refresh;
+- (nonnull instancetype)initWithAction:(NSString * _Nonnull)action foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure SWIFT_UNAVAILABLE;
 @end
 
 
@@ -150,10 +157,12 @@ SWIFT_CLASS("_TtC10ActionCell10IconAction")
 
 SWIFT_CLASS("_TtC10ActionCell10TextAction")
 @interface TextAction : ActionControl
-- (nonnull instancetype)initWithLabelText:(NSString * _Nonnull)labelText labelFont:(UIFont * _Nonnull)labelFont foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithAction:(NSString * _Nonnull)action labelText:(NSString * _Nonnull)labelText labelFont:(UIFont * _Nonnull)labelFont foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure OBJC_DESIGNATED_INITIALIZER;
 - (nullable instancetype)initWithCoder:(NSCoder * _Nonnull)aDecoder OBJC_DESIGNATED_INITIALIZER;
 @property (nonatomic, readonly) CGSize intrinsicContentSize;
 - (void)removeFromSuperview;
+- (void)refresh;
+- (nonnull instancetype)initWithAction:(NSString * _Nonnull)action foreColor:(UIColor * _Nonnull)foreColor backColor:(UIColor * _Nonnull)backColor width:(CGFloat)width actionClosure:(void (^ _Nullable)(void))actionClosure SWIFT_UNAVAILABLE;
 @end
 
 

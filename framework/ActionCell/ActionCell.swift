@@ -8,9 +8,15 @@
 
 import UIKit
 
-open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: CellActionProtocol {
+public protocol ActionCellActionDelegate: NSObjectProtocol {
+    func didActionTriggered(cell: UITableViewCell, action: String)
+}
+
+open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: ActionControlAppearanceDelegate {
     
     // MARK: ActionCell - 动作设置
+    /// ActionControlActionDelegate
+    public weak var delegate: ActionCellActionDelegate? = nil
     /// Actions - Left
     public var actionsLeft: [CellAction] {
         get {
@@ -790,13 +796,17 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     }
 }
 
-extension ActionCell: ActionDelegate {
-    public func didActionTriggered(action: (() -> ())?) {
-        animateOpenPreToClose(action)
+extension ActionCell: ActionControlActionDelegate {
+    public func didActionTriggered(action: String, actionClosure: (() -> ())?) {
+        let closure = {
+            actionClosure?()
+            self.delegate?.didActionTriggered(cell: self, action: action)
+        }
+        animateOpenPreToClose(closure)
     }
 }
 
-public class ActionSheet<CellAction: ActionControl> where CellAction: CellActionProtocol {
+public class ActionSheet<CellAction: ActionControl> where CellAction: ActionControlAppearanceDelegate {
     var side: ActionSide
     var actions: [CellAction] = []
     

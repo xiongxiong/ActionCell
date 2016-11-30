@@ -8,30 +8,32 @@
 
 import UIKit
 
-public protocol ActionDelegate: NSObjectProtocol {
-    func didActionTriggered(action: (() -> ())?)
+public protocol ActionControlActionDelegate: NSObjectProtocol {
+    func didActionTriggered(action: String, actionClosure: (() -> ())?)
 }
 
-public protocol CellActionProtocol {
+public protocol ActionControlAppearanceDelegate {
     func setForeColor(color: UIColor)
     func setForeAlpha(alpha: CGFloat)
 }
 
 open class ActionControl: UIControl {
     
+    var action: String
     var foreColor: UIColor
     var backColor: UIColor
     var width: CGFloat
     var actionClosure: (() -> ())?
     
     /// Delegate
-    weak var delegate: ActionDelegate? = nil
+    weak var delegate: ActionControlActionDelegate? = nil
     weak var constraintLeading: NSLayoutConstraint? = nil
     weak var constraintTrailing: NSLayoutConstraint? = nil
     weak var iconConstraintWidth: NSLayoutConstraint? = nil
     weak var iconConstraintHeight: NSLayoutConstraint? = nil
     
-    public init(foreColor: UIColor, backColor: UIColor, width: CGFloat, actionClosure: (() -> ())?) {
+    public init(action: String, foreColor: UIColor, backColor: UIColor, width: CGFloat, actionClosure: (() -> ())?) {
+        self.action = action
         self.foreColor = foreColor
         self.backColor = backColor
         self.width = width
@@ -66,7 +68,7 @@ open class ActionControl: UIControl {
     
     /// Action is triggered
     func actionTriggered() {
-        delegate?.didActionTriggered(action: actionClosure)
+        delegate?.didActionTriggered(action: action, actionClosure: actionClosure)
     }
 }
 
@@ -77,10 +79,10 @@ open class IconAction: ActionControl {
     
     var icon: UIImageView = UIImageView()
     
-    public init(iconImage: UIImage, iconSize: CGSize = CGSize(width: 20, height: 20), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 60, actionClosure: (() -> ())? = nil) {
+    public init(action: String, iconImage: UIImage, iconSize: CGSize = CGSize(width: 20, height: 20), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 60, actionClosure: (() -> ())? = nil) {
         self.iconImage = iconImage
         self.iconSize = iconSize
-        super.init(foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
+        super.init(action: action, foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
         
         addSubview(icon)
         icon.translatesAutoresizingMaskIntoConstraints = false
@@ -119,7 +121,7 @@ open class IconAction: ActionControl {
     }
 }
 
-extension IconAction: CellActionProtocol {
+extension IconAction: ActionControlAppearanceDelegate {
     public func setForeColor(color: UIColor) {
         icon.tintColor = color
     }
@@ -145,10 +147,10 @@ open class TextAction: ActionControl {
     
     var label: UILabel = UILabel()
     
-    public init(labelText: String, labelFont: UIFont = UIFont.systemFont(ofSize: 12), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 60, actionClosure: (() -> ())? = nil) {
+    public init(action: String, labelText: String, labelFont: UIFont = UIFont.systemFont(ofSize: 12), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 60, actionClosure: (() -> ())? = nil) {
         self.labelText = labelText
         self.labelFont = labelFont
-        super.init(foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
+        super.init(action: action, foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
         
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -186,7 +188,7 @@ open class TextAction: ActionControl {
     }
 }
 
-extension TextAction: CellActionProtocol {
+extension TextAction: ActionControlAppearanceDelegate {
     public func setForeColor(color: UIColor) {
         label.tintColor = color
     }
