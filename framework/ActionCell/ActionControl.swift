@@ -17,7 +17,7 @@ public protocol CellActionProtocol {
     func setForeAlpha(alpha: CGFloat)
 }
 
-public class ActionControl: UIControl {
+open class ActionControl: UIControl {
     
     var foreColor: UIColor
     var backColor: UIColor
@@ -31,7 +31,7 @@ public class ActionControl: UIControl {
     weak var iconConstraintWidth: NSLayoutConstraint? = nil
     weak var iconConstraintHeight: NSLayoutConstraint? = nil
     
-    init(foreColor: UIColor, backColor: UIColor, width: CGFloat, actionClosure: (() -> ())?) {
+    public init(foreColor: UIColor, backColor: UIColor, width: CGFloat, actionClosure: (() -> ())?) {
         self.foreColor = foreColor
         self.backColor = backColor
         self.width = width
@@ -50,7 +50,7 @@ public class ActionControl: UIControl {
         removeTarget(self, action: #selector(actionTriggered), for: .touchUpInside)
     }
     
-    override public func removeFromSuperview() {
+    open override func removeFromSuperview() {
         super.removeFromSuperview()
         
         alpha = 1
@@ -60,7 +60,7 @@ public class ActionControl: UIControl {
     }
     
     /// Reset attributes to initial state
-    func refresh() {
+    open func refresh() {
         backgroundColor = backColor
     }
     
@@ -70,7 +70,7 @@ public class ActionControl: UIControl {
     }
 }
 
-public class IconAction: ActionControl {
+open class IconAction: ActionControl {
     
     var iconImage: UIImage
     var iconSize: CGSize
@@ -101,13 +101,13 @@ public class IconAction: ActionControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func removeFromSuperview() {
+    open override func removeFromSuperview() {
         super.removeFromSuperview()
         
         icon.alpha = 1
     }
     
-    override func refresh() {
+    open override func refresh() {
         super.refresh()
         
         icon.image = iconImage.withRenderingMode(.alwaysTemplate)
@@ -129,7 +129,7 @@ extension IconAction: CellActionProtocol {
     }
 }
 
-public class TextAction: ActionControl {
+open class TextAction: ActionControl {
     
     var labelText: String
     var labelFont: UIFont
@@ -167,17 +167,17 @@ public class TextAction: ActionControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public var intrinsicContentSize: CGSize {
+    open override var intrinsicContentSize: CGSize {
         return CGSize(width: label.intrinsicContentSize.width + 20, height: bounds.height)
     }
     
-    override public func removeFromSuperview() {
+    open override func removeFromSuperview() {
         super.removeFromSuperview()
         
         label.alpha = 1
     }
     
-    override func refresh() {
+    open override func refresh() {
         super.refresh()
         
         label.font = labelFont

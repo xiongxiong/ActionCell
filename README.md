@@ -5,7 +5,7 @@
 
 Easy to use UITableViewCell implementing swiping to trigger actions (known from the Mailbox App)
 
-![ActionCell](Framework/ScreenShot/ActionCell.gif "ActionCell")
+![ActionCell](ScreenShot/ActionCell.gif "ActionCell")
 
 ## Contents
 

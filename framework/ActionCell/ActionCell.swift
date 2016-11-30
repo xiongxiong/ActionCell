@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: CellActionProtocol {
+open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: CellActionProtocol {
     
     // MARK: ActionCell - 动作设置
     /// Actions - Left
@@ -125,7 +125,7 @@ public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAc
         initialize()
     }
     
-    public override func prepareForReuse() {
+    open override func prepareForReuse() {
         super.prepareForReuse()
         initialize()
     }
@@ -553,7 +553,7 @@ public class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAc
     }
     
     // MARK: UIGestureRecognizerDelegate
-    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         enableLog ? { print("\(#function)" + "") }() : {}()
         
         if let g = gestureRecognizer as? UIPanGestureRecognizer {
