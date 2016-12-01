@@ -69,6 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 },
             ]
             cell.delegate = self
+            cell.waitForFinish = false
             return cell
         case 1:
             let cell = ActionCell<TextAction>()
@@ -207,13 +208,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 
 extension ViewController: ActionCellActionDelegate {
-    public func didActionTriggered(cell: UITableViewCell, action: String, completion: @escaping () -> ()) {
+    public func didActionTriggered(cell: UITableViewCell, action: String) {
         let alert = UIAlertController(title: "Select", message: "Select any", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
-            print("hello")
+            print("select - ok")
+            (cell as? ActionResultDelegate)?.actionFinished(cancelled: false)
         }))
         alert.addAction(UIAlertAction(title: "cancel", style: .default, handler: { (action) in
-            completion()
+            print("select - cancel")
+            (cell as? ActionResultDelegate)?.actionFinished(cancelled: true)
         }))
         present(alert, animated: true, completion: nil)
     }
