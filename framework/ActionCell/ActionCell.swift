@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol ActionCellActionDelegate: NSObjectProtocol {
-    func didActionTriggered(cell: UITableViewCell, action: String)
+    func didActionTriggered(cell: UITableViewCell, action: String, completion: @escaping () -> ())
 }
 
 open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: ActionControlAppearanceDelegate {
@@ -798,11 +798,10 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
 
 extension ActionCell: ActionControlActionDelegate {
     public func didActionTriggered(action: String, actionClosure: (() -> ())?) {
-        let closure = {
-            actionClosure?()
-            self.delegate?.didActionTriggered(cell: self, action: action)
+        actionClosure?()
+        self.delegate?.didActionTriggered(cell: self, action: action) { [weak self] in
+            self?.animateOpenToClose()
         }
-        animateOpenPreToClose(closure)
     }
 }
 

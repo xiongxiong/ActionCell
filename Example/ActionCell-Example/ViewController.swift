@@ -68,6 +68,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 0 -- left 2 clicked")
                 },
             ]
+            cell.delegate = self
             return cell
         case 1:
             let cell = ActionCell<TextAction>()
@@ -97,6 +98,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
+            cell.delegate = self
             return cell
         case 2:
             let cell = ActionCell<IconAction>()
@@ -129,6 +131,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 2 -- right 3 clicked")
                 },
             ]
+            cell.delegate = self
             return cell
         case 3:
             let cell = ActionCell<IconAction>()
@@ -162,6 +165,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 3 -- right 3 clicked")
                 },
             ]
+            cell.delegate = self
             return cell
         case 4:
             let cell = ActionCell<IconAction>()
@@ -178,6 +182,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 4 -- left 2 clicked")
                 },
             ]
+            cell.delegate = self
             return cell
         case 5:
             let cell = ActionCell<IconAction>()
@@ -193,10 +198,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 5 -- left 2 clicked")
                 },
             ]
+            cell.delegate = self
             return cell
         default:
             return UITableViewCell()
         }
+    }
+}
+
+extension ViewController: ActionCellActionDelegate {
+    public func didActionTriggered(cell: UITableViewCell, action: String, completion: @escaping () -> ()) {
+        let alert = UIAlertController(title: "Select", message: "Select any", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
+            print("hello")
+        }))
+        alert.addAction(UIAlertAction(title: "cancel", style: .default, handler: { (action) in
+            completion()
+        }))
+        present(alert, animated: true, completion: nil)
     }
 }
 
