@@ -147,7 +147,7 @@ open class TextAction: ActionControl {
     
     var label: UILabel = UILabel()
     
-    public init(action: String, labelText: String, labelFont: UIFont = UIFont.systemFont(ofSize: 12), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 60, actionClosure: (() -> ())? = nil) {
+    public init(action: String, labelText: String, labelFont: UIFont = UIFont.systemFont(ofSize: 12), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 80, actionClosure: (() -> ())? = nil) {
         self.labelText = labelText
         self.labelFont = labelFont
         super.init(action: action, foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)

@@ -10,7 +10,7 @@ import UIKit
 
 public protocol ActionCellActionDelegate: NSObjectProtocol {
     
-    var tableView: UITableView { get }
+    var tableView: UITableView! { get }
     /// Do something when action is triggered
     func didActionTriggered(cell: UITableViewCell, action: String)
 }
@@ -90,10 +90,6 @@ open class ActionCell<ActionItem: ActionControl>: UITableViewCell, ActionSheetDe
     // MARK: ActionCell - 行为设置
     /// Enable default action to be triggered when the content is panned to far enough
     public var enableDefaultAction: Bool = true
-    /// Index of default action - Left
-    public var defaultActionIndexLeft: Int = 0
-    /// Index of default action - Right
-    public var defaultActionIndexRight: Int = 0
     /* 
     *   If wait for delegate to finish the action:
     *   If false, close or clear actionsheet immediately, in this case, action is finished when triggered, otherwise cancelled.
@@ -673,10 +669,15 @@ open class ActionCell<ActionItem: ActionControl>: UITableViewCell, ActionSheetDe
     func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
-        if gestureRecognizer.direction == UISwipeGestureRecognizerDirection.left {
-            respondToSwipe(side: .right)
-        } else {
-            respondToSwipe(side: .left)
+        switch gestureRecognizer.state {
+        case .ended:
+            if gestureRecognizer.direction == UISwipeGestureRecognizerDirection.left {
+                respondToSwipe(side: .right)
+            } else {
+                respondToSwipe(side: .left)
+            }
+        default:
+            break
         }
     }
     
@@ -788,9 +789,9 @@ open class ActionCell<ActionItem: ActionControl>: UITableViewCell, ActionSheetDe
     func getDefaultAction(side: ActionSide) -> ActionItem? {
         switch side {
         case .left:
-            return getCurrentActionsheetActions(side: side)[defaultActionIndexLeft]
+            return getCurrentActionsheetActions(side: side).first
         case .right:
-            return getCurrentActionsheetActions(side: side)[defaultActionIndexRight]
+            return getCurrentActionsheetActions(side: side).first
         }
     }
     
