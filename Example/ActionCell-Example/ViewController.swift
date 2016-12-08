@@ -170,7 +170,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         case 4:
             let cell = ActionCell<IconAction>()
-            cell.textLabel?.text = "This action sheet has only one side"
+            cell.textLabel?.text = "This actionsheet has only one side"
             cell.animationStyle = .ladder
             cell.actionsRight = [
                 IconAction(action: "cell 4 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
@@ -187,7 +187,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         case 5:
             let cell = ActionCell<IconAction>()
-            cell.textLabel?.text = "This action sheet has only one side"
+            cell.textLabel?.text = "This actionsheet has only one side"
             cell.actionsLeft = [
                 IconAction(action: "cell 5 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 5 -- left 0 clicked")
@@ -208,6 +208,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 
 extension ViewController: ActionCellActionDelegate {
+    
     public func didActionTriggered(cell: UITableViewCell, action: String) {
         let alert = UIAlertController(title: "Select", message: "Select any", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in

@@ -9,8 +9,21 @@
 import UIKit
 
 public protocol ActionCellActionDelegate: NSObjectProtocol {
+    
+    var tableView: UITableView { get }
     /// Do something when action is triggered
     func didActionTriggered(cell: UITableViewCell, action: String)
+}
+
+extension ActionCellActionDelegate {
+    /// Close other cell's actionsheet before open own actionsheet
+    func closeActionsheet() {
+        tableView.visibleCells.forEach { (cell) in
+            if let cell = cell as? ActionSheetDelegate {
+                cell.closeActionsheet()
+            }
+        }
+    }
 }
 
 public protocol ActionResultDelegate {
@@ -18,13 +31,21 @@ public protocol ActionResultDelegate {
     func actionFinished(cancelled: Bool)
 }
 
-open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellAction: ActionControlAppearanceDelegate {
+public protocol ActionSheetDelegate {
+    /// Open actionsheet
+    func openActionsheet(side: ActionSide)
+    /// Close actionsheet
+    func closeActionsheet()
+}
+
+open class ActionCell<ActionItem: ActionControl>: UITableViewCell, ActionSheetDelegate where ActionItem: ActionControlAppearanceDelegate {
     
     // MARK: ActionCell - 动作设置
     /// ActionControlActionDelegate
     public weak var delegate: ActionCellActionDelegate? = nil
+    
     /// Actions - Left
-    public var actionsLeft: [CellAction] {
+    public var actionsLeft: [ActionItem] {
         get {
             return actionsheetLeft.actions
         }
@@ -36,7 +57,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     /// Actions - Right
-    public var actionsRight: [CellAction] {
+    public var actionsRight: [ActionItem] {
         get {
             return actionsheetRight.actions
         }
@@ -104,17 +125,21 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     // MARK: ActionCell - 私有属性
     /// actionsheet - Left
-    var actionsheetLeft: Actionsheet = Actionsheet<CellAction>(side: .left)
+    var actionsheetLeft: Actionsheet = Actionsheet<ActionItem>(side: .left)
     /// actionsheet - Right
-    var actionsheetRight: Actionsheet = Actionsheet<CellAction>(side: .right)
+    var actionsheetRight: Actionsheet = Actionsheet<ActionItem>(side: .right)
+    /// swipeLeftGestureRecognizer
+    var swipeLeftGestureRecognizer: UISwipeGestureRecognizer!
+    /// swipeRightGestureRecognizer
+    var swipeRightGestureRecognizer: UISwipeGestureRecognizer!
     /// panGestureRecognizer
     var panGestureRecognizer: UIPanGestureRecognizer!
     /// tapGestureRecognizer
     var tapGestureRecognizer: UITapGestureRecognizer!
     /// Screenshot of the cell
     var contentScreenshot: UIImageView? = nil
-    /// Current action side
-    var currentActionsheet: Actionsheet<CellAction>? = nil
+    /// Current actionsheet
+    var currentActionsheet: Actionsheet<ActionItem>? = nil
     /// Container for current actions
     var actionContainer: UIView = UIView()
     /// The default action to trigger when content is panned to the far side.
@@ -122,15 +147,33 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     /// The default action is triggered or not
     var isDefaultActionTriggered: Bool = false
     /// Enable log
-    var enableLog: Bool = false
+    var isLogEnabled: Bool = false
+    
+    // MARK: Computed properties
+    /// ActionSheet opened or not
+    open var isActionSheetOpened: Bool {
+        return currentActionsheet != nil
+    }
     
     override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         
+        swipeLeftGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
+        addGestureRecognizer(swipeLeftGestureRecognizer)
+        swipeLeftGestureRecognizer.delegate = self
+        swipeLeftGestureRecognizer.direction = .left
+        
+        swipeRightGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
+        addGestureRecognizer(swipeRightGestureRecognizer)
+        swipeRightGestureRecognizer.delegate = self
+        swipeRightGestureRecognizer.direction = .right
+        
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGestureRecognizer(_:)))
         addGestureRecognizer(panGestureRecognizer)
         panGestureRecognizer.delegate = self
+        panGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
+        panGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
         addGestureRecognizer(tapGestureRecognizer)
@@ -149,7 +192,17 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     open override func prepareForReuse() {
         super.prepareForReuse()
+        
         initialize()
+    }
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        next?.touchesBegan(touches, with: event)
+        
+        if !isActionSheetOpened {
+            delegate?.closeActionsheet()
+        }
     }
     
     // MARK: Initialization
@@ -158,9 +211,9 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     }
     
     // MARK: Actionsheet
-    /// Setup action sheet
+    /// Setup actionsheet
     func setupActionsheet(side: ActionSide) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if isCurrentActionsheetValid(side: side) {
             contentScreenshot = takeScreenShot()
@@ -181,11 +234,11 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     
-    /// Clear action sheet when action sheet is closed
+    /// Clear actionsheet when actionsheet is closed
     public func clearActionsheet() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
-        if currentActionsheet != nil {
+        if isActionSheetOpened {
             defaultAction?.refresh()
             defaultAction = nil
             
@@ -202,11 +255,19 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     
-    /// Close opened action sheet
-    public func closeActionsheet() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+    /// Open actionsheet
+    public func openActionsheet(side: ActionSide) {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
-        if currentActionsheet != nil {
+        setupActionsheet(side: side)
+        animateCloseToOpen()
+    }
+    
+    /// Close opened actionsheet
+    public func closeActionsheet() {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
+        
+        if isActionSheetOpened {
             animateOpenToClose()
         }
     }
@@ -214,7 +275,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     // MARK: Action Constraints
     /// Set actions' constraints for beginning
     func setupActionConstraints() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         actionContainer.translatesAutoresizingMaskIntoConstraints = false
         contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
@@ -271,7 +332,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Set actions' constraints for state Close
     func setActionConstraintsForClose() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
@@ -293,7 +354,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Set actions' constraints for state Open
     func setActionConstraintsForOpen() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
@@ -316,7 +377,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Get actions' constraints for position
     func setActionConstraintsForPosition(position: CGFloat) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
@@ -377,7 +438,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     // MARK: Action Attributes
     /// Set actions' attributes for state Close
     func setActionAttributesForClose() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         currentActionsheet?.actions.forEach {
             $0.setForeAlpha(alpha: 1)
@@ -386,7 +447,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Set actions' attributes for state Open
     func setActionAttributesForOpen() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         currentActionsheet?.actions.forEach {
             $0.setForeAlpha(alpha: 1)
@@ -395,7 +456,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Set actions' attributes for position
     func setActionAttributesForPosition(position: CGFloat) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         currentActionsheet?.actions.enumerated().forEach { (index, action) in
             if let side = currentActionsheet?.side {
@@ -421,7 +482,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     // MARK: Default Action
     /// Set defaultAction's constraints for position, when defaultAction is triggered
     func setDefaultActionConstraintsForPosition(position: CGFloat) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let side = currentActionsheet?.side {
             switch side {
@@ -439,7 +500,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Animate when default action is triggered
     func animateDefaultActionTriggered(completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let side = currentActionsheet?.side {
             setDefaultActionConstraintsForPosition(position: self.positionForTriggerPrepare(side: side))
@@ -457,7 +518,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Animate when default action's trigger is cancelled
     func animateDefaultActionCancelled(completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if (currentActionsheet?.side) != nil {
             setActionConstraintsForOpen()
@@ -473,9 +534,9 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     }
     
     // MARK: Action Animate
-    /// Animate actions & contentScreenshot from state OpenPrepare to state Close, when gesture recognizer ended or cancelled
-    func animateOpenPreToClose(_ completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+    /// Animate actions & contentScreenshot with orientation Open to Close
+    func animateOpenToClose(_ completionHandler: (() -> ())? = nil) {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let contentScreenshot = contentScreenshot {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
@@ -491,9 +552,9 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     
-    /// Animate actions & contentScreenshot from state OpenPrepare to state Open, when gesture recognizer ended or cancelled
-    func animateOpenPreToOpen(_ completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+    /// Animate actions & contentScreenshot with orientation Close to Open
+    func animateCloseToOpen(_ completionHandler: (() -> ())? = nil) {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
@@ -508,9 +569,9 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     
-    /// Animate actions & contentScreenshot from state TriggerPrepare to state Open, when gesture recognizer ended or cancelled
-    func animateTriggerPreToOpen(_ completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+    /// Animate actions & contentScreenshot with orientation Trigger to Open
+    func animateTriggerToOpen(_ completionHandler: (() -> ())? = nil) {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
@@ -524,9 +585,9 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     
-    /// Animate actions & contentScreenshot to state Trigger, when gesture recognizer ended or cancelled
-    func animateTriggerPreToTrigger(_ completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+    /// Animate actions & contentScreenshot with orientation Open to Trigger
+    func animateOpenToTrigger(_ completionHandler: (() -> ())? = nil) {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
@@ -541,27 +602,9 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
         }
     }
     
-    /// Animate actions & contentScreenshot from state Open to state Close, when tap gesture is recognized to close the action sheet
-    func animateOpenToClose(_ completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
-        
-        if let contentScreenshot = contentScreenshot {
-            UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
-                contentScreenshot.frame.origin.x = self.positionForClose()
-                self.setActionConstraintsForClose()
-                self.setActionAttributesForClose()
-                }, completion: { finished in
-                    if finished {
-                        completionHandler?()
-                        self.clearActionsheet()
-                    }
-            })
-        }
-    }
-    
     /// Animate actions to position, when the cell is panned
     func animateToPosition(_ position: CGFloat, completionHandler: (() -> ())? = nil) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let side = currentActionsheet?.side {
             setActionConstraintsForPosition(position: position)
@@ -588,7 +631,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Actionsheet's animation when action is finished
     func animateActionFinished() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         switch animationActionFinished {
         case .clear:
@@ -600,7 +643,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     /// Actionsheet's animation when action is cancelled
     func animateActionCancelled() {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         switch animationActionCancelled {
         case .clear:
@@ -612,7 +655,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     
     // MARK: UIGestureRecognizerDelegate
     open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let g = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = g.velocity(in: self)
@@ -627,14 +670,34 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     }
     
     // MARK: Handle Gestures
+    func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
+        
+        if gestureRecognizer.direction == UISwipeGestureRecognizerDirection.left {
+            respondToSwipe(side: .right)
+        } else {
+            respondToSwipe(side: .left)
+        }
+    }
+    
+    func respondToSwipe(side: ActionSide) {
+        if !isActionSheetOpened {
+            openActionsheet(side: side)
+        } else if currentActionsheet?.side == side {
+            animateOpenToTrigger()
+        } else {
+            animateOpenToClose()
+        }
+    }
+    
     func handlePanGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
-        enableLog ? { print("\(#function) -- " + "") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         let translation = gestureRecognizer.translation(in: self)
         let velocity = gestureRecognizer.velocity(in: self)
         switch gestureRecognizer.state {
         case .began, .changed:
-            enableLog ? { print("\(#function) -- " + "gesture recognizer state Began / Changed") }() : {}()
+            isLogEnabled ? { print("\(#function) -- " + "gesture recognizer state Began / Changed") }() : {}()
             var actionSide: ActionSide? = nil
             if let contentScreenshot = contentScreenshot {
                 let contentPosition = contentScreenshot.frame.origin.x
@@ -661,25 +724,25 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
                 animateToPosition(contentScreenshot.frame.origin.x)
             }
         case .ended, .cancelled:
-            enableLog ? { print("\(#function) -- " + "gesture recognizer state Ended / Cancelled") }() : {}()
+            isLogEnabled ? { print("\(#function) -- " + "gesture recognizer state Ended / Cancelled") }() : {}()
             var closure: (() -> ())? = nil
             if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
                 switch positionSection(side: side, position: contentScreenshot.frame.origin.x) {
                 case .close_OpenPre:
                     closure = { [weak self] in
-                        self?.animateOpenPreToClose()
+                        self?.animateOpenToClose()
                     }
                 case .openPre_Open:
                     closure = { [weak self] in
-                        self?.animateOpenPreToOpen()
+                        self?.animateCloseToOpen()
                     }
                 case .open_TriggerPre:
                     closure = enableDefaultAction ? { [weak self] in
-                        self?.animateTriggerPreToOpen()
+                        self?.animateTriggerToOpen()
                         } : nil
                 case .triggerPre_Trigger:
                     closure = { [weak self] in
-                        self?.animateTriggerPreToTrigger()
+                        self?.animateOpenToTrigger()
                     }
                 }
                 animateToPosition(contentScreenshot.frame.origin.x, completionHandler: closure)
@@ -706,8 +769,8 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     }
     
     // MARK: Action
-    /// Get current action sheet
-    func getCurrentActionsheet(side: ActionSide) -> Actionsheet<CellAction> {
+    /// Get current actionsheet
+    func getCurrentActionsheet(side: ActionSide) -> Actionsheet<ActionItem> {
         switch side {
         case .left:
             return actionsheetLeft
@@ -717,12 +780,12 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     }
     
     /// Get current side actions
-    func getCurrentActionsheetActions(side: ActionSide) -> [CellAction] {
+    func getCurrentActionsheetActions(side: ActionSide) -> [ActionItem] {
         return getCurrentActionsheet(side: side).actions
     }
     
     /// Get default action
-    func getDefaultAction(side: ActionSide) -> CellAction? {
+    func getDefaultAction(side: ActionSide) -> ActionItem? {
         switch side {
         case .left:
             return getCurrentActionsheetActions(side: side)[defaultActionIndexLeft]
@@ -805,7 +868,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
     func ladderingIndex(side: ActionSide, position: CGFloat) -> Int {
         let position = abs(position)
         
-        var result: [(Int, CellAction)] = []
+        var result: [(Int, ActionItem)] = []
         result = getCurrentActionsheetActions(side: side).enumerated().filter({ (index, action) -> Bool in
             let widthPre = getCurrentActionsheet(side: side).actionPreWidth(actionIndex: index)
             return abs(position) >= widthPre && abs(position) < widthPre + action.width
@@ -844,7 +907,7 @@ open class ActionCell<CellAction: ActionControl>: UITableViewCell where CellActi
 
 extension ActionCell: ActionControlActionDelegate {
     public func didActionTriggered(action: String, actionClosure: (() -> ())?) {
-        enableLog ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
         
         actionClosure?()
         self.delegate?.didActionTriggered(cell: self, action: action)
@@ -857,7 +920,7 @@ extension ActionCell: ActionControlActionDelegate {
 extension ActionCell: ActionResultDelegate {
     
     public func actionFinished(cancelled: Bool) {
-        enableLog ? { print("\(#function) -- " + "action " + (cancelled ? "cancelled" : "finished")) }() : {}()
+        isLogEnabled ? { print("\(#function) -- " + "action " + (cancelled ? "cancelled" : "finished")) }() : {}()
         
         cancelled ? { animateActionCancelled() }() : { animateActionFinished() }()
     }
