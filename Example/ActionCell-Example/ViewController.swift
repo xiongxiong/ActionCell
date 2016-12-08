@@ -11,7 +11,7 @@ import ActionCell
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var tableView: UITableView = UITableView()
+    var tableView: UITableView! = UITableView()
     var output: UILabel = UILabel()
     
     override func viewDidLoad() {
@@ -35,8 +35,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[tableView]-[output(60)]|", options: .alignAllLeading, metrics: nil, views: ["tableView":tableView, "output":output]))
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -44,19 +48,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 0:
             let cell = ActionCell<IconAction>()
             cell.textLabel?.text = "Colorful actions"
-            cell.defaultActionIndexLeft = 1
             cell.actionsLeft = [
                 IconAction(action: "cell 0 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 0 clicked")
                 },
-                IconAction(action: "cell 0 -- left 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00), width: 140) {
+                IconAction(action: "cell 0 -- left 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 1 clicked")
                 },
                 IconAction(action: "cell 0 -- left 2", iconImage: UIImage(named: "2")!, backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 2 clicked")
                 },
             ]
-            cell.defaultActionIndexRight = 2
             cell.actionsRight = [
                 IconAction(action: "cell 0 -- right 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 0 clicked")
@@ -64,18 +66,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 IconAction(action: "cell 0 -- right 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 1 clicked")
                 },
-                IconAction(action: "cell 0 -- right 2", iconImage: UIImage(named: "2")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00), width: 140) {
+                IconAction(action: "cell 0 -- right 2", iconImage: UIImage(named: "2")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 2 clicked")
                 },
             ]
             cell.delegate = self
             cell.waitForFinish = false
+            cell.animationStyle = .none
             return cell
         case 1:
             let cell = ActionCell<TextAction>()
             cell.textLabel?.text = "Both sides have actions"
             cell.animationStyle = .ladder_emergence
-            cell.defaultActionIndexLeft = 1
             cell.actionsLeft = [
                 TextAction(action: "cell 1 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
@@ -87,7 +89,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
-            cell.defaultActionIndexRight = 2
             cell.actionsRight = [
                 TextAction(action: "cell 1 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
@@ -100,106 +101,65 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 },
             ]
             cell.delegate = self
+            cell.animationStyle = .ladder
             return cell
         case 2:
-            let cell = ActionCell<IconAction>()
-            cell.textLabel?.text = "Actions have the same back color"
+            let cell = ActionCell<TextAction>()
+            cell.textLabel?.text = "Both sides have actions"
+            cell.animationStyle = .ladder_emergence
             cell.actionsLeft = [
-                IconAction(action: "cell 2 -- left 0", iconImage: UIImage(named: "0")!) {
-                    self.output.text = ("cell 2 -- left 0 clicked")
+                TextAction(action: "cell 2 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 0 clicked")
                 },
-                IconAction(action: "cell 2 -- left 1", iconImage: UIImage(named: "1")!) {
-                    self.output.text = ("cell 2 -- left 1 clicked")
+                TextAction(action: "cell 2 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 1 clicked")
                 },
-                IconAction(action: "cell 2 -- left 2", iconImage: UIImage(named: "2")!) {
+                TextAction(action: "cell 2 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
                     self.output.text = ("cell 2 -- left 2 clicked")
                 },
-                IconAction(action: "cell 2 -- left 3", iconImage: UIImage(named: "3")!) {
-                    self.output.text = ("cell 2 -- left 3 clicked")
-                },
             ]
             cell.actionsRight = [
-                IconAction(action: "cell 2 -- right 0", iconImage: UIImage(named: "5")!) {
-                    self.output.text = ("cell 2 -- right 0 clicked")
+                TextAction(action: "cell 2 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 0 clicked")
                 },
-                IconAction(action: "cell 2 -- right 1", iconImage: UIImage(named: "6")!) {
-                    self.output.text = ("cell 2 -- right 1 clicked")
+                TextAction(action: "cell 2 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 1 clicked")
                 },
-                IconAction(action: "cell 2 -- right 2", iconImage: UIImage(named: "7")!) {
-                    self.output.text = ("cell 2 -- right 2 clicked")
-                },
-                IconAction(action: "cell 2 -- right 3", iconImage: UIImage(named: "8")!) {
-                    self.output.text = ("cell 2 -- right 3 clicked")
+                TextAction(action: "cell 2 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
+                    self.output.text = ("cell 2 -- left 2 clicked")
                 },
             ]
             cell.delegate = self
+            cell.animationStyle = .ladder_emergence
             return cell
         case 3:
-            let cell = ActionCell<IconAction>()
-            cell.textLabel?.text = "Actions have the same back color"
-            cell.animationStyle = .none
+            let cell = ActionCell<TextAction>()
+            cell.textLabel?.text = "Both sides have actions"
+            cell.animationStyle = .ladder_emergence
             cell.actionsLeft = [
-                IconAction(action: "cell 3 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- left 0 clicked")
+                TextAction(action: "cell 3 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 0 clicked")
                 },
-                IconAction(action: "cell 3 -- left 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- left 1 clicked")
+                TextAction(action: "cell 3 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 1 clicked")
                 },
-                IconAction(action: "cell 3 -- left 2", iconImage: UIImage(named: "2")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- left 2 clicked")
-                },
-                IconAction(action: "cell 3 -- left 3", iconImage: UIImage(named: "3")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- left 3 clicked")
+                TextAction(action: "cell 3 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
             cell.actionsRight = [
-                IconAction(action: "cell 3 -- right 0", iconImage: UIImage(named: "5")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- right 0 clicked")
+                TextAction(action: "cell 3 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 0 clicked")
                 },
-                IconAction(action: "cell 3 -- right 1", iconImage: UIImage(named: "6")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- right 1 clicked")
+                TextAction(action: "cell 3 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 1 clicked")
                 },
-                IconAction(action: "cell 3 -- right 2", iconImage: UIImage(named: "7")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- right 2 clicked")
-                },
-                IconAction(action: "cell 3 -- right 3", iconImage: UIImage(named: "8")!, backColor: UIColor(red:0.43, green:0.68, blue:0.97, alpha:1.00)) {
-                    self.output.text = ("cell 3 -- right 3 clicked")
+                TextAction(action: "cell 3 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
+                    self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
             cell.delegate = self
-            return cell
-        case 4:
-            let cell = ActionCell<IconAction>()
-            cell.textLabel?.text = "This actionsheet has only one side"
-            cell.animationStyle = .ladder
-            cell.actionsRight = [
-                IconAction(action: "cell 4 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
-                    self.output.text = ("cell 4 -- left 0 clicked")
-                },
-                IconAction(action: "cell 4 -- left 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
-                    self.output.text = ("cell 4 -- left 1 clicked")
-                },
-                IconAction(action: "cell 4 -- left 2", iconImage: UIImage(named: "2")!, backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
-                    self.output.text = ("cell 4 -- left 2 clicked")
-                },
-            ]
-            cell.delegate = self
-            return cell
-        case 5:
-            let cell = ActionCell<IconAction>()
-            cell.textLabel?.text = "This actionsheet has only one side"
-            cell.actionsLeft = [
-                IconAction(action: "cell 5 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
-                    self.output.text = ("cell 5 -- left 0 clicked")
-                },
-                IconAction(action: "cell 5 -- left 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) {
-                    self.output.text = ("cell 5 -- left 1 clicked")
-                },
-                IconAction(action: "cell 5 -- left 2", iconImage: UIImage(named: "2")!, backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
-                    self.output.text = ("cell 5 -- left 2 clicked")
-                },
-            ]
-            cell.delegate = self
+            cell.animationStyle = .concurrent
             return cell
         default:
             return UITableViewCell()
