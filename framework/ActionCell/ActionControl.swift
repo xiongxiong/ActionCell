@@ -79,7 +79,7 @@ open class IconAction: ActionControl {
     
     var icon: UIImageView = UIImageView()
     
-    public init(action: String, iconImage: UIImage, iconSize: CGSize = CGSize(width: 20, height: 20), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 60, actionClosure: (() -> ())? = nil) {
+    public init(action: String, iconImage: UIImage, iconSize: CGSize = CGSize(width: 20, height: 20), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 80, actionClosure: (() -> ())? = nil) {
         self.iconImage = iconImage
         self.iconSize = iconSize
         super.init(action: action, foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
