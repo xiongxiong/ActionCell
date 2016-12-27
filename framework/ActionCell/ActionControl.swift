@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol ActionControlActionDelegate: NSObjectProtocol {
-    func didActionTriggered(action: String, actionClosure: (() -> ())?)
+    func didActionTriggered(action: String)
 }
 
 open class ActionControl: UIControl {
@@ -18,7 +18,6 @@ open class ActionControl: UIControl {
     var foreColor: UIColor
     var backColor: UIColor
     var width: CGFloat
-    var actionClosure: (() -> ())?
     
     /// Delegate
     weak var delegate: ActionControlActionDelegate? = nil
@@ -27,12 +26,11 @@ open class ActionControl: UIControl {
     weak var iconConstraintWidth: NSLayoutConstraint? = nil
     weak var iconConstraintHeight: NSLayoutConstraint? = nil
     
-    public init(action: String, foreColor: UIColor, backColor: UIColor, width: CGFloat, actionClosure: (() -> ())?) {
+    public init(action: String, foreColor: UIColor, backColor: UIColor, width: CGFloat) {
         self.action = action
         self.foreColor = foreColor
         self.backColor = backColor
         self.width = width
-        self.actionClosure = actionClosure
         super.init(frame: CGRect.zero)
         
         self.backgroundColor = backColor
@@ -63,7 +61,7 @@ open class ActionControl: UIControl {
     
     /// Action is triggered
     func actionTriggered() {
-        delegate?.didActionTriggered(action: action, actionClosure: actionClosure)
+        delegate?.didActionTriggered(action: action)
     }
     
     public func setForeColor(color: UIColor) {
@@ -82,10 +80,10 @@ open class IconAction: ActionControl {
     
     var icon: UIImageView = UIImageView()
     
-    public init(action: String, iconImage: UIImage, iconSize: CGSize = CGSize(width: 20, height: 20), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 80, actionClosure: (() -> ())? = nil) {
+    public init(action: String, iconImage: UIImage, iconSize: CGSize = CGSize(width: 20, height: 20), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 80) {
         self.iconImage = iconImage
         self.iconSize = iconSize
-        super.init(action: action, foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
+        super.init(action: action, foreColor: foreColor, backColor: backColor, width: width)
         
         addSubview(icon)
         icon.translatesAutoresizingMaskIntoConstraints = false
@@ -148,10 +146,10 @@ open class TextAction: ActionControl {
     
     var label: UILabel = UILabel()
     
-    public init(action: String, labelText: String, labelFont: UIFont = UIFont.systemFont(ofSize: 12), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 80, actionClosure: (() -> ())? = nil) {
+    public init(action: String, labelText: String, labelFont: UIFont = UIFont.systemFont(ofSize: 12), foreColor: UIColor = .white, backColor: UIColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00), width: CGFloat = 80) {
         self.labelText = labelText
         self.labelFont = labelFont
-        super.init(action: action, foreColor: foreColor, backColor: backColor, width: width, actionClosure: actionClosure)
+        super.init(action: action, foreColor: foreColor, backColor: backColor, width: width)
         
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -10,6 +10,8 @@ import UIKit
 
 /// Enable log
 fileprivate var isLogEnabled: Bool = true
+/// 
+fileprivate var key_action_delegate = "key_action_delegate"
 
 public protocol ActionCellActionDelegate: NSObjectProtocol {
     
@@ -22,9 +24,11 @@ extension ActionCellActionDelegate {
     /// Close other cell's actionsheet before open own actionsheet
     func closeActionsheet() {
         tableView.visibleCells.forEach { (cell) in
-            if let cell = cell as? ActionSheetDelegate {
-                cell.closeActionsheet()
-            }
+            cell.subviews.forEach({ (view) in
+                if let wrapper = view as? UITableViewCellActionWrapper {
+                    wrapper.closeActionsheet()
+                }
+            })
         }
     }
 }
@@ -167,13 +171,13 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     // MARK: Initialization
     public func wrap(cell target: UITableViewCell) {
         cell = target
-        cell!.selectionStyle = .none
-        cell!.addSubview(self)
+//        target.setValue("", forKey: key_action_delegate)
+        target.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
-        cell!.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: cell!, attribute: .leading, multiplier: 1, constant: 0))
-        cell!.addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: cell!, attribute: .trailing, multiplier: 1, constant: 0))
-        cell!.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: cell!, attribute: .top, multiplier: 1, constant: 0))
-        cell!.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: cell!, attribute: .bottom, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: target, attribute: .leading, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: target, attribute: .trailing, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: target, attribute: .top, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: target, attribute: .bottom, multiplier: 1, constant: 0))
         
         swipeLeftGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeLeftGestureRecognizer)
@@ -211,9 +215,9 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if isCurrentActionsheetValid(side: side) {
-            contentScreenshot = takeScreenShot()
+            contentScreenshot = UIImageView(image: screenshotImageOfView(view: cell!))
             
-            cell!.contentView.addSubview(actionContainer)
+            addSubview(actionContainer)
             currentActionsheet = getCurrentActionsheet(side: side)
             defaultAction = getDefaultAction(side: side)
             actionContainer.backgroundColor = defaultAction?.backgroundColor ?? UIColor.white
@@ -223,7 +227,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             setupActionConstraints()
             setActionAttributesForClose()
             
-            cell!.contentView.addSubview(contentScreenshot!)
+            addSubview(contentScreenshot!)
             
             tapGestureRecognizer.isEnabled = true
         }
@@ -273,8 +277,8 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         actionContainer.translatesAutoresizingMaskIntoConstraints = false
-        cell!.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
-        cell!.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
         
         actionContainer.removeConstraints(actionContainer.constraints)
         currentActionsheet?.actions.enumerated().forEach { (index, action) in
@@ -770,19 +774,6 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         UIGraphicsEndImageContext()
         return image!
     }
-    
-    /// 创建当前单元格的视图（针对选中状态做了特殊处理）
-    func takeScreenShot() -> UIImageView {
-        let isContentBackgroundClear = (cell!.contentView.backgroundColor == nil || cell!.contentView.backgroundColor == UIColor.clear)
-        if isContentBackgroundClear {
-            cell!.contentView.backgroundColor = UIColor.white
-        }
-        let contentScreenshotImage = screenshotImageOfView(view: cell!.contentView)
-        if isContentBackgroundClear {
-            cell!.contentView.backgroundColor = nil
-        }
-        return UIImageView(image: contentScreenshotImage)
-    }
 }
 
 extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
@@ -792,7 +783,7 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
         
         if let g = gestureRecognizer as? UIPanGestureRecognizer {
-            let velocity = g.velocity(in: cell!)
+            let velocity = g.velocity(in: self)
             if fabs(velocity.x) > fabs(velocity.y) {
                 return true
             } else {
@@ -911,10 +902,9 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
 }
 
 extension UITableViewCellActionWrapper: ActionControlActionDelegate {
-    public func didActionTriggered(action: String, actionClosure: (() -> ())?) {
+    public func didActionTriggered(action: String) {
         isLogEnabled ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
         
-        actionClosure?()
         self.delegate?.didActionTriggered(cell: cell!, action: action)
         if waitForFinish == false {
             animateActionFinished()
