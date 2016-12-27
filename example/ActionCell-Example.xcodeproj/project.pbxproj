@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		420E4AB21E128EB700FAD571 /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		422E710B1D8F56B900307E3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710A1D8F56B900307E3A /* AppDelegate.swift */; };
 		422E710D1D8F56B900307E3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710C1D8F56B900307E3A /* ViewController.swift */; };
 		422E71101D8F56B900307E3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
@@ -20,7 +21,6 @@
 		428DC5E91DEFD4C500E19D08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		428DC5EA1DEFD4C500E19D08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 422E71111D8F56BA00307E3A /* Assets.xcassets */; };
 		428DC5EB1DEFD4C500E19D08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
-		428DC5F61DEFD55800E19D08 /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5F41DEFD55800E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +68,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				420E4AB21E128EB700FAD571 /* ActionCell.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,7 +79,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				428DC5F61DEFD55800E19D08 /* ActionCell.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,7 +102,6 @@
 		428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ActionCell.xcodeproj; path = ../Framework/ActionCell.xcodeproj; sourceTree = "<group>"; };
 		428DC5F01DEFD4C500E19D08 /* ActionCell-Example Simulator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ActionCell-Example Simulator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		428DC5F11DEFD4C500E19D08 /* ActionCell-Example copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ActionCell-Example copy-Info.plist"; path = "/Users/wonderbear/Creation/ActionCell/Example/ActionCell-Example copy-Info.plist"; sourceTree = "<absolute>"; };
-		428DC5F41DEFD55800E19D08 /* ActionCell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ActionCell.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +140,6 @@
 		422E70FE1D8F56B900307E3A = {
 			isa = PBXGroup;
 			children = (
-				428DC5F41DEFD55800E19D08 /* ActionCell.framework */,
 				428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */,
 				422E71091D8F56B900307E3A /* ActionCell-Example */,
 				422E711E1D8F56BA00307E3A /* ActionCell-ExampleTests */,
