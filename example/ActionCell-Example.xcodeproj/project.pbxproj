@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		420E4AB21E128EB700FAD571 /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		420E4AB71E12AE5B00FAD571 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; };
 		422E710B1D8F56B900307E3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710A1D8F56B900307E3A /* AppDelegate.swift */; };
 		422E710D1D8F56B900307E3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710C1D8F56B900307E3A /* ViewController.swift */; };
 		422E71101D8F56B900307E3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
@@ -17,13 +17,19 @@
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
 		428DC5E41DEFD4C500E19D08 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710C1D8F56B900307E3A /* ViewController.swift */; };
 		428DC5E51DEFD4C500E19D08 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710A1D8F56B900307E3A /* AppDelegate.swift */; };
-		428DC5E71DEFD4C500E19D08 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; };
 		428DC5E91DEFD4C500E19D08 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		428DC5EA1DEFD4C500E19D08 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 422E71111D8F56BA00307E3A /* Assets.xcassets */; };
 		428DC5EB1DEFD4C500E19D08 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		420E4AB81E12AE6700FAD571 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4263EFE61D8D1901005006B8;
+			remoteInfo = ActionCell;
+		};
 		422E711C1D8F56BA00307E3A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 422E70FF1D8F56B900307E3A /* Project object */;
@@ -52,13 +58,6 @@
 			remoteGlobalIDString = 4263EFF01D8D1901005006B8;
 			remoteInfo = ActionCellTests;
 		};
-		428DC5E21DEFD4C500E19D08 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4263EFE61D8D1901005006B8;
-			remoteInfo = ActionCell;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -68,7 +67,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				420E4AB21E128EB700FAD571 /* ActionCell.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,7 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				428DC5E71DEFD4C500E19D08 /* ActionCell.framework in Frameworks */,
+				420E4AB71E12AE5B00FAD571 /* ActionCell.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,7 +275,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				428DC5E11DEFD4C500E19D08 /* PBXTargetDependency */,
+				420E4AB91E12AE6700FAD571 /* PBXTargetDependency */,
 			);
 			name = "ActionCell-Example Simulator";
 			productName = "ActionCell-Example";
@@ -433,6 +431,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		420E4AB91E12AE6700FAD571 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ActionCell;
+			targetProxy = 420E4AB81E12AE6700FAD571 /* PBXContainerItemProxy */;
+		};
 		422E711D1D8F56BA00307E3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 422E71061D8F56B900307E3A /* ActionCell-Example */;
@@ -442,11 +445,6 @@
 			isa = PBXTargetDependency;
 			target = 422E71061D8F56B900307E3A /* ActionCell-Example */;
 			targetProxy = 422E71271D8F56BA00307E3A /* PBXContainerItemProxy */;
-		};
-		428DC5E11DEFD4C500E19D08 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ActionCell;
-			targetProxy = 428DC5E21DEFD4C500E19D08 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

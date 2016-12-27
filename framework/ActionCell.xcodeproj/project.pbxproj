@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		420E4AB51E12907100FAD571 /* UITableViewCellActionWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420E4AB41E12907100FAD571 /* UITableViewCellActionWrapper.swift */; };
 		422E70FC1D8F50B700307E3A /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FA1D8F50B700307E3A /* ActionCell.swift */; };
 		422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FB1D8F50B700307E3A /* ActionControl.swift */; };
 		4263EFF11D8D1901005006B8 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4263EFE71D8D1901005006B8 /* ActionCell.framework */; };
@@ -25,6 +26,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		420E4AB41E12907100FAD571 /* UITableViewCellActionWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewCellActionWrapper.swift; sourceTree = "<group>"; };
 		422E70FA1D8F50B700307E3A /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		422E70FB1D8F50B700307E3A /* ActionControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionControl.swift; sourceTree = "<group>"; };
 		4263EFE71D8D1901005006B8 /* ActionCell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,6 +79,7 @@
 		4263EFE91D8D1901005006B8 /* ActionCell */ = {
 			isa = PBXGroup;
 			children = (
+				420E4AB41E12907100FAD571 /* UITableViewCellActionWrapper.swift */,
 				422E70FA1D8F50B700307E3A /* ActionCell.swift */,
 				422E70FB1D8F50B700307E3A /* ActionControl.swift */,
 				4263F0011D8D1BC2005006B8 /* Support Files */,
@@ -221,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				420E4AB51E12907100FAD571 /* UITableViewCellActionWrapper.swift in Sources */,
 				422E70FC1D8F50B700307E3A /* ActionCell.swift in Sources */,
 				422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */,
 			);

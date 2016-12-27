@@ -12,11 +12,6 @@ public protocol ActionControlActionDelegate: NSObjectProtocol {
     func didActionTriggered(action: String, actionClosure: (() -> ())?)
 }
 
-public protocol ActionControlAppearanceDelegate {
-    func setForeColor(color: UIColor)
-    func setForeAlpha(alpha: CGFloat)
-}
-
 open class ActionControl: UIControl {
     
     var action: String
@@ -70,6 +65,14 @@ open class ActionControl: UIControl {
     func actionTriggered() {
         delegate?.didActionTriggered(action: action, actionClosure: actionClosure)
     }
+    
+    public func setForeColor(color: UIColor) {
+        
+    }
+    
+    public func setForeAlpha(alpha: CGFloat) {
+       
+    }
 }
 
 open class IconAction: ActionControl {
@@ -119,14 +122,12 @@ open class IconAction: ActionControl {
         setNeedsLayout()
         layoutIfNeeded()
     }
-}
-
-extension IconAction: ActionControlAppearanceDelegate {
-    public func setForeColor(color: UIColor) {
+    
+    public override func setForeColor(color: UIColor) {
         icon.tintColor = color
     }
     
-    public func setForeAlpha(alpha: CGFloat) {
+    public override func setForeAlpha(alpha: CGFloat) {
         icon.alpha = alpha
     }
 }
@@ -186,14 +187,12 @@ open class TextAction: ActionControl {
         label.text = labelText
         label.textColor = foreColor
     }
-}
-
-extension TextAction: ActionControlAppearanceDelegate {
-    public func setForeColor(color: UIColor) {
+    
+    public override func setForeColor(color: UIColor) {
         label.tintColor = color
     }
     
-    public func setForeAlpha(alpha: CGFloat) {
+    public override func setForeAlpha(alpha: CGFloat) {
         label.alpha = alpha
     }
 }

@@ -18,12 +18,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         view.backgroundColor = UIColor.white
-        
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.description())
         
         view.addSubview(output)
         output.translatesAutoresizingMaskIntoConstraints = false
@@ -46,9 +46,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch (indexPath as NSIndexPath).row {
         case 0:
-            let cell = ActionCell<IconAction>()
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Colorful actions"
-            cell.actionsLeft = [
+            let wrapper = UITableViewCellActionWrapper()
+            wrapper.actionsLeft = [
                 IconAction(action: "cell 0 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 0 clicked")
                 },
@@ -59,7 +60,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 0 -- left 2 clicked")
                 },
             ]
-            cell.actionsRight = [
+            wrapper.actionsRight = [
                 IconAction(action: "cell 0 -- right 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 0 -- left 0 clicked")
                 },
@@ -70,15 +71,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 0 -- left 2 clicked")
                 },
             ]
-            cell.delegate = self
-            cell.waitForFinish = false
-            cell.animationStyle = .none
+            wrapper.delegate = self
+            wrapper.waitForFinish = false
+            wrapper.animationStyle = .none
+            wrapper.wrap(cell: cell)
             return cell
         case 1:
-            let cell = ActionCell<TextAction>()
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Both sides have actions"
-            cell.animationStyle = .ladder_emergence
-            cell.actionsLeft = [
+            let wrapper = UITableViewCellActionWrapper()
+            wrapper.animationStyle = .ladder_emergence
+            wrapper.actionsLeft = [
                 TextAction(action: "cell 1 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
@@ -89,7 +92,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
-            cell.actionsRight = [
+            wrapper.actionsRight = [
                 TextAction(action: "cell 1 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
@@ -100,14 +103,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
-            cell.delegate = self
-            cell.animationStyle = .ladder
+            wrapper.delegate = self
+            wrapper.animationStyle = .ladder
+            wrapper.wrap(cell: cell)
             return cell
         case 2:
-            let cell = ActionCell<TextAction>()
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Both sides have actions"
-            cell.animationStyle = .ladder_emergence
-            cell.actionsLeft = [
+            let wrapper = UITableViewCellActionWrapper()
+            wrapper.animationStyle = .ladder_emergence
+            wrapper.actionsLeft = [
                 TextAction(action: "cell 2 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
@@ -118,7 +123,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 2 -- left 2 clicked")
                 },
             ]
-            cell.actionsRight = [
+            wrapper.actionsRight = [
                 TextAction(action: "cell 2 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
@@ -129,14 +134,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 2 -- left 2 clicked")
                 },
             ]
-            cell.delegate = self
-            cell.animationStyle = .ladder_emergence
+            wrapper.delegate = self
+            wrapper.animationStyle = .ladder_emergence
+            wrapper.wrap(cell: cell)
             return cell
         case 3:
-            let cell = ActionCell<TextAction>()
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Both sides have actions"
-            cell.animationStyle = .ladder_emergence
-            cell.actionsLeft = [
+            let wrapper = UITableViewCellActionWrapper()
+            wrapper.animationStyle = .ladder_emergence
+            wrapper.actionsLeft = [
                 TextAction(action: "cell 3 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
@@ -147,7 +154,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
-            cell.actionsRight = [
+            wrapper.actionsRight = [
                 TextAction(action: "cell 3 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
                     self.output.text = ("cell 1 -- left 0 clicked")
                 },
@@ -158,8 +165,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.output.text = ("cell 1 -- left 2 clicked")
                 },
             ]
-            cell.delegate = self
-            cell.animationStyle = .concurrent
+            wrapper.delegate = self
+            wrapper.animationStyle = .concurrent
+            wrapper.wrap(cell: cell)
             return cell
         default:
             return UITableViewCell()
