@@ -8,11 +8,6 @@
 
 import UIKit
 
-/// Enable log
-fileprivate var isLogEnabled: Bool = true
-/// 
-fileprivate var key_action_delegate = "key_action_delegate"
-
 public protocol ActionCellActionDelegate: NSObjectProtocol {
     
     var tableView: UITableView! { get }
@@ -46,6 +41,10 @@ public protocol ActionSheetDelegate {
 }
 
 open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
+    
+    // MARK: Logging
+    /// Enable logging debug information
+    var isLogEnabled: Bool = true
     
     // MARK: ActionCell - 动作设置
     /// ActionControlActionDelegate
