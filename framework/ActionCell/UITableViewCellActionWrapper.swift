@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol ActionCellActionDelegate: NSObjectProtocol {
-    
+
     var tableView: UITableView! { get }
     /// Do something when action is triggered
     func didActionTriggered(cell: UITableViewCell, action: String)
@@ -41,15 +41,15 @@ public protocol ActionSheetDelegate {
 }
 
 open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
-    
+
     // MARK: Logging
     /// Enable logging debug information
     var isLogEnabled: Bool = true
-    
+
     // MARK: ActionCell - 动作设置
     /// ActionControlActionDelegate
     public weak var delegate: ActionCellActionDelegate? = nil
-    
+
     /// Actions - Left
     public var actionsLeft: [ActionControl] {
         get {
@@ -74,7 +74,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             }
         }
     }
-    
+
     // MARK: ActionCell - 样式设置
     /// Action 动画形式
     public var animationStyle: ActionsheetOpenStyle = .concurrent
@@ -92,7 +92,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     public var defaultActionBackImage: UIImage? = nil
     /// Default action's back color
     public var defaultActionBackColor: UIColor? = nil
-    
+
     // MARK: ActionCell - 行为设置
     /// Enable default action to be triggered when the content is panned to far enough
     public var enableDefaultAction: Bool = true
@@ -102,7 +102,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
      *   If true, wait until delegate finished the action, in this case, action is finished when triggered and delegate called `actionFinished(cancelled: false)`, otherwise cancelled
      */
     public var waitForFinish: Bool = false
-    
+
     // MARK: ActionCell - 动画设置
     /// Spring animation - duration of the animation
     public var animationDuration: TimeInterval = 0.3
@@ -124,7 +124,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     public var animationActionFinished: ActionsheetCloseStyle = .clear
     /// Actionsheet close animation when action is cancelled
     public var animationActionCancelled: ActionsheetCloseStyle = .close
-    
+
     // MARK: ActionCell - 私有属性
     /// cell
     weak var cell: UITableViewCell?
@@ -150,72 +150,73 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     var defaultAction: ActionControl?
     /// The default action is triggered or not
     var isDefaultActionTriggered: Bool = false
-    
+
     // MARK: Computed properties
     /// ActionSheet opened or not
     open var isActionSheetOpened: Bool {
         return currentActionsheet != nil
     }
-    
+
     /// If the cell's action sheet is about to open, ask delegate to close other cell's action sheet
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         next?.touchesBegan(touches, with: event)
-        
+
         if !isActionSheetOpened {
             delegate?.closeActionsheet()
         }
     }
-    
+
     // MARK: Initialization
     public func wrap(cell target: UITableViewCell) {
         cell = target
-//        target.setValue("", forKey: key_action_delegate)
+
+        target.selectionStyle = .none
         target.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
         target.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: target, attribute: .leading, multiplier: 1, constant: 0))
         target.addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: target, attribute: .trailing, multiplier: 1, constant: 0))
         target.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: target, attribute: .top, multiplier: 1, constant: 0))
         target.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: target, attribute: .bottom, multiplier: 1, constant: 0))
-        
+
         swipeLeftGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeLeftGestureRecognizer)
         swipeLeftGestureRecognizer.delegate = self
         swipeLeftGestureRecognizer.direction = .left
-        
+
         swipeRightGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeRightGestureRecognizer)
         swipeRightGestureRecognizer.delegate = self
         swipeRightGestureRecognizer.direction = .right
-        
+
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGestureRecognizer(_:)))
         addGestureRecognizer(panGestureRecognizer)
         panGestureRecognizer.delegate = self
         panGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         panGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
-        
+
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
         addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.numberOfTapsRequired = 1
         tapGestureRecognizer.require(toFail: panGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
-        
+
         initialize()
     }
-    
+
     func initialize() {
         clearActionsheet()
     }
-    
+
     // MARK: Actionsheet
     /// Setup actionsheet
     func setupActionsheet(side: ActionSide) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if isCurrentActionsheetValid(side: side) {
-            contentScreenshot = UIImageView(image: screenshotImageOfView(view: cell!))
-            
+            contentScreenshot = takeScreenshot()
+
             addSubview(actionContainer)
             currentActionsheet = getCurrentActionsheet(side: side)
             defaultAction = getDefaultAction(side: side)
@@ -225,60 +226,60 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             }
             setupActionConstraints()
             setActionAttributesForClose()
-            
+
             addSubview(contentScreenshot!)
-            
+
             tapGestureRecognizer.isEnabled = true
         }
     }
-    
+
     /// Clear actionsheet when actionsheet is closed
     public func clearActionsheet() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if isActionSheetOpened {
             defaultAction?.refresh()
             defaultAction = nil
-            
+
             currentActionsheet?.actions.forEach {
                 $0.removeFromSuperview()
             }
             currentActionsheet = nil
             actionContainer.removeFromSuperview()
-            
+
             contentScreenshot?.removeFromSuperview()
             contentScreenshot = nil
-            
+
             tapGestureRecognizer.isEnabled = false
         }
     }
-    
+
     /// Open actionsheet
     public func openActionsheet(side: ActionSide) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         setupActionsheet(side: side)
         animateCloseToOpen()
     }
-    
+
     /// Close opened actionsheet
     public func closeActionsheet() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if isActionSheetOpened {
             animateOpenToClose()
         }
     }
-    
+
     // MARK: Action Constraints
     /// Set actions' constraints for beginning
     func setupActionConstraints() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         actionContainer.translatesAutoresizingMaskIntoConstraints = false
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
-        
+
         actionContainer.removeConstraints(actionContainer.constraints)
         currentActionsheet?.actions.enumerated().forEach { (index, action) in
             action.translatesAutoresizingMaskIntoConstraints = false
@@ -327,11 +328,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         actionContainer.setNeedsLayout()
         actionContainer.layoutIfNeeded()
     }
-    
+
     /// Set actions' constraints for state Close
     func setActionConstraintsForClose() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
                 updateSingleActionConstraints(action: action) {
@@ -349,11 +350,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         actionContainer.setNeedsLayout()
         actionContainer.layoutIfNeeded()
     }
-    
+
     /// Set actions' constraints for state Open
     func setActionConstraintsForOpen() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
                 let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
@@ -372,11 +373,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         actionContainer.setNeedsLayout()
         actionContainer.layoutIfNeeded()
     }
-    
+
     /// Get actions' constraints for position
     func setActionConstraintsForPosition(position: CGFloat) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
                 let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
@@ -432,30 +433,30 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         actionContainer.setNeedsLayout()
         actionContainer.layoutIfNeeded()
     }
-    
+
     // MARK: Action Attributes
     /// Set actions' attributes for state Close
     func setActionAttributesForClose() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         currentActionsheet?.actions.forEach {
             $0.setForeAlpha(alpha: 1)
         }
     }
-    
+
     /// Set actions' attributes for state Open
     func setActionAttributesForOpen() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         currentActionsheet?.actions.forEach {
             $0.setForeAlpha(alpha: 1)
         }
     }
-    
+
     /// Set actions' attributes for position
     func setActionAttributesForPosition(position: CGFloat) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         currentActionsheet?.actions.enumerated().forEach { (index, action) in
             if let side = currentActionsheet?.side {
                 let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
@@ -476,12 +477,12 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             }
         }
     }
-    
+
     // MARK: Default Action
     /// Set defaultAction's constraints for position, when defaultAction is triggered
     func setDefaultActionConstraintsForPosition(position: CGFloat) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let side = currentActionsheet?.side {
             switch side {
             case .left:
@@ -495,11 +496,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         actionContainer.setNeedsLayout()
         actionContainer.layoutIfNeeded()
     }
-    
+
     /// Animate when default action is triggered
     func animateDefaultActionTriggered(completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let side = currentActionsheet?.side {
             setDefaultActionConstraintsForPosition(position: self.positionForTriggerPrepare(side: side))
             currentActionsheet?.actions.forEach {
@@ -513,11 +514,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             completionHandler?()
         }
     }
-    
+
     /// Animate when default action's trigger is cancelled
     func animateDefaultActionCancelled(completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if (currentActionsheet?.side) != nil {
             setActionConstraintsForOpen()
             currentActionsheet?.actions.forEach {
@@ -530,12 +531,12 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             completionHandler?()
         }
     }
-    
+
     // MARK: Action Animate
     /// Animate actions & contentScreenshot with orientation Open to Close
     func animateOpenToClose(_ completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let contentScreenshot = contentScreenshot {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForClose()
@@ -549,11 +550,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             })
         }
     }
-    
+
     /// Animate actions & contentScreenshot with orientation Close to Open
     func animateCloseToOpen(_ completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
@@ -566,11 +567,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             })
         }
     }
-    
+
     /// Animate actions & contentScreenshot with orientation Trigger to Open
     func animateTriggerToOpen(_ completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
@@ -582,11 +583,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             })
         }
     }
-    
+
     /// Animate actions & contentScreenshot with orientation Open to Trigger
     func animateOpenToTrigger(_ completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForTrigger(side: side)
@@ -599,15 +600,15 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             })
         }
     }
-    
+
     /// Animate actions to position, when the cell is panned
     func animateToPosition(_ position: CGFloat, completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let side = currentActionsheet?.side {
             setActionConstraintsForPosition(position: position)
             setActionAttributesForPosition(position: position)
-            
+
             switch positionSection(side: side, position: position) {
             case .close_OpenPre, .openPre_Open, .open_TriggerPre:
                 if isDefaultActionTriggered == true {
@@ -626,11 +627,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             }
         }
     }
-    
+
     /// Actionsheet's animation when action is finished
     func animateActionFinished() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         switch animationActionFinished {
         case .clear:
             clearActionsheet()
@@ -638,11 +639,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             closeActionsheet()
         }
     }
-    
+
     /// Actionsheet's animation when action is cancelled
     func animateActionCancelled() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         switch animationActionCancelled {
         case .clear:
             clearActionsheet()
@@ -650,7 +651,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             closeActionsheet()
         }
     }
-    
+
     // MARK: Action
     /// Get current actionsheet
     func getCurrentActionsheet(side: ActionSide) -> Actionsheet {
@@ -661,12 +662,12 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return actionsheetRight
         }
     }
-    
+
     /// Get current side actions
     func getCurrentActionsheetActions(side: ActionSide) -> [ActionControl] {
         return getCurrentActionsheet(side: side).actions
     }
-    
+
     /// Get default action
     func getDefaultAction(side: ActionSide) -> ActionControl? {
         switch side {
@@ -676,12 +677,12 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return getCurrentActionsheetActions(side: side).first
         }
     }
-    
+
     /// Does current side have actions to show
     func isCurrentActionsheetValid(side: ActionSide) -> Bool {
         return getCurrentActionsheet(side: side).actions.count > 0
     }
-    
+
     /// Update single action's constraints
     func updateSingleActionConstraints(action: ActionControl, updateClosure: () -> ()) {
         if let constraintLeading = action.constraintLeading, let constraintTrailing = action.constraintTrailing {
@@ -690,13 +691,13 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             actionContainer.addConstraints([constraintLeading, constraintTrailing])
         }
     }
-    
+
     // MARK: Position of cell state
     /// Threshold for state Close
     func positionForClose() -> CGFloat {
         return 0
     }
-    
+
     /// Threshold for state Open
     func positionForOpen(side: ActionSide) -> CGFloat {
         switch side {
@@ -706,12 +707,12 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return -1 * getCurrentActionsheet(side: side).width
         }
     }
-    
+
     /// Threshold for state OpenPrepare
     func positionForOpenPrepare(side: ActionSide) -> CGFloat {
         return positionForOpen(side: side) / 2.0
     }
-    
+
     /// Threshold for state Trigger
     func positionForTrigger(side: ActionSide) -> CGFloat {
         switch side {
@@ -721,7 +722,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return -1 * bounds.width
         }
     }
-    
+
     /// Threshold for state TriggerPrepare
     func positionForTriggerPrepare(side: ActionSide) -> CGFloat {
         let actionsheetWidth = getCurrentActionsheet(side: side).width
@@ -732,7 +733,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return -1 * (actionsheetWidth + (bounds.width - actionsheetWidth) * defaultActionTriggerPropotion)
         }
     }
-    
+
     /// Get the section of current position
     func positionSection(side: ActionSide, position: CGFloat) -> PositionSection {
         let absPosition = abs(position)
@@ -746,11 +747,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return .triggerPre_Trigger
         }
     }
-    
+
     /// Get laddering index
     func ladderingIndex(side: ActionSide, position: CGFloat) -> Int {
         let position = abs(position)
-        
+
         var result: [(Int, ActionControl)] = []
         result = getCurrentActionsheetActions(side: side).enumerated().filter({ (index, action) -> Bool in
             let widthPre = getCurrentActionsheet(side: side).actionPreWidth(actionIndex: index)
@@ -762,7 +763,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
             return getCurrentActionsheetActions(side: side).count
         }
     }
-    
+
     // MARK: Auxiliary
     /// 创建视图的截图
     func screenshotImageOfView(view: UIView) -> UIImage {
@@ -773,14 +774,27 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         UIGraphicsEndImageContext()
         return image!
     }
+    
+    /// Create screenshot of cell's contentView
+    func takeScreenshot() -> UIImageView {
+        let isBackgroundClear = cell!.contentView.backgroundColor == nil
+        if isBackgroundClear {
+            cell!.contentView.backgroundColor = UIColor.white
+        }
+        let screenshot = UIImageView(image: screenshotImageOfView(view: cell!.contentView))
+        if isBackgroundClear {
+            cell!.contentView.backgroundColor = nil
+        }
+        return screenshot
+    }
 }
 
 extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
-    
+
     // MARK: UIGestureRecognizerDelegate
     open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         if let g = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = g.velocity(in: self)
             if fabs(velocity.x) > fabs(velocity.y) {
@@ -792,11 +806,11 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
             return true
         }
     }
-    
+
     // MARK: Handle Gestures
     func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         switch gestureRecognizer.state {
         case .ended:
             if gestureRecognizer.direction == UISwipeGestureRecognizerDirection.left {
@@ -808,7 +822,7 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
             break
         }
     }
-    
+
     func respondToSwipe(side: ActionSide) {
         if !isActionSheetOpened {
             openActionsheet(side: side)
@@ -818,10 +832,10 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
             animateOpenToClose()
         }
     }
-    
+
     func handlePanGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         let translation = gestureRecognizer.translation(in: self)
         let velocity = gestureRecognizer.velocity(in: self)
         switch gestureRecognizer.state {
@@ -840,13 +854,13 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
                     setupActionsheet(side: actionSide)
                 }
             }
-            
+
             if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side , isCurrentActionsheetValid(side: side) {
                 let openPosition = positionForOpen(side: side)
-                
+
                 contentScreenshot.frame.origin.x += translation.x
                 gestureRecognizer.setTranslation(CGPoint.zero, in: self)
-                
+
                 if enableDefaultAction == false, abs(contentScreenshot.frame.origin.x) >= openPosition {
                     contentScreenshot.frame.origin.x = openPosition
                 }
@@ -880,10 +894,10 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
             break
         }
     }
-    
+
     func handleTapGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-        
+
         let location = gestureRecognizer.location(in: self)
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             switch side {
@@ -903,7 +917,7 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
 extension UITableViewCellActionWrapper: ActionControlActionDelegate {
     public func didActionTriggered(action: String) {
         isLogEnabled ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
-        
+
         self.delegate?.didActionTriggered(cell: cell!, action: action)
         if waitForFinish == false {
             animateActionFinished()
@@ -912,10 +926,10 @@ extension UITableViewCellActionWrapper: ActionControlActionDelegate {
 }
 
 extension UITableViewCellActionWrapper: ActionResultDelegate {
-    
+
     public func actionFinished(cancelled: Bool) {
         isLogEnabled ? { print("\(#function) -- " + "action " + (cancelled ? "cancelled" : "finished")) }() : {}()
-        
+
         cancelled ? { animateActionCancelled() }() : { animateActionFinished() }()
     }
 }
@@ -923,18 +937,18 @@ extension UITableViewCellActionWrapper: ActionResultDelegate {
 public class Actionsheet {
     var side: ActionSide
     var actions: [ActionControl] = []
-    
+
     /// sum of all actions' width
     var width: CGFloat {
         return actions.reduce(0, { (result, action) -> CGFloat in
             result + action.width
         })
     }
-    
+
     init(side: ActionSide) {
         self.side = side
     }
-    
+
     /// sum of width of actions which is previous to the action
     func actionPreWidth(actionIndex index: Int) -> CGFloat {
         return actions.prefix(upTo: index).reduce(0, { (result, action) -> CGFloat in
