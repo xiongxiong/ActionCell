@@ -50,31 +50,6 @@ open class ActionCell: UIView, ActionSheetDelegate {
     /// ActionControlActionDelegate
     public weak var delegate: ActionCellDelegate? = nil
 
-    /// Actions - Left
-    public var actionsLeft: [ActionControl] {
-        get {
-            return actionsheetLeft.actions
-        }
-        set {
-            actionsheetLeft.actions = newValue
-            actionsheetLeft.actions.forEach {
-                $0.delegate = self
-            }
-        }
-    }
-    /// Actions - Right
-    public var actionsRight: [ActionControl] {
-        get {
-            return actionsheetRight.actions
-        }
-        set {
-            actionsheetRight.actions = newValue
-            actionsheetRight.actions.forEach {
-                $0.delegate = self
-            }
-        }
-    }
-
     // MARK: ActionCell - 样式设置
     /// Action 动画形式
     public var animationStyle: ActionsheetOpenStyle = .concurrent
@@ -86,28 +61,14 @@ open class ActionCell: UIView, ActionSheetDelegate {
             }
         }
     }
-    /// Default action's icon color
-    public var defaultActionIconColor: UIColor? = nil
-    /// Default action's back image
-    public var defaultActionBackImage: UIImage? = nil
-    /// Default action's back color
-    public var defaultActionBackColor: UIColor? = nil
 
     // MARK: ActionCell - 行为设置
     /// Enable default action to be triggered when the content is panned to far enough
     public var enableDefaultAction: Bool = true
-    /*
-     *   If wait for delegate to finish the action:
-     *   If false, close or clear actionsheet immediately, in this case, action is finished when triggered, otherwise cancelled.
-     *   If true, wait until delegate finished the action, in this case, action is finished when triggered and delegate called `actionFinished(cancelled: false)`, otherwise cancelled
-     */
-    public var waitForFinish: Bool = false
 
     // MARK: ActionCell - 动画设置
     /// Spring animation - duration of the animation
     public var animationDuration: TimeInterval = 0.3
-    /// Spring animation - delay of the animation
-    public var animationDelay: TimeInterval = 0
     /// Spring animation - spring damping of the animation
     public var springDamping: CGFloat = 1 {
         willSet {
@@ -117,13 +78,9 @@ open class ActionCell: UIView, ActionSheetDelegate {
         }
     }
     /// Spring animation - initial spring velocity of the animation
-    public var initialSpringVelocity: CGFloat = 0
+    public var initialSpringVelocity: CGFloat = 20
     /// Spring animation - options of the animation
     public var animationOptions: UIViewAnimationOptions = .curveLinear
-    /// Actionsheet close animation when action is finished
-    public var animationActionFinished: ActionsheetCloseStyle = .clear
-    /// Actionsheet close animation when action is cancelled
-    public var animationActionCancelled: ActionsheetCloseStyle = .close
 
     // MARK: ActionCell - 私有属性
     /// cell
@@ -150,6 +107,32 @@ open class ActionCell: UIView, ActionSheetDelegate {
     var isDefaultActionTriggered: Bool = false
 
     // MARK: Computed properties
+    /// Actions - Left
+    var actionsLeft: [ActionControl] {
+        get {
+            return actionsheetLeft.actions
+        }
+        set {
+            actionsheetLeft.actions = newValue
+            actionsheetLeft.actions.forEach {
+                $0.delegate = self
+            }
+        }
+    }
+    
+    /// Actions - Right
+    var actionsRight: [ActionControl] {
+        get {
+            return actionsheetRight.actions
+        }
+        set {
+            actionsheetRight.actions = newValue
+            actionsheetRight.actions.forEach {
+                $0.delegate = self
+            }
+        }
+    }
+    
     /// ActionSheet opened or not
     open var isActionSheetOpened: Bool {
         return currentActionsheet != nil
@@ -166,8 +149,10 @@ open class ActionCell: UIView, ActionSheetDelegate {
     }
 
     // MARK: Initialization
-    public func wrap(cell target: UITableViewCell) {
+    public func wrap(cell target: UITableViewCell, leftActions: [ActionControl] = [], rightActions: [ActionControl] = []) {
         cell = target
+        actionsLeft = leftActions
+        actionsRight = rightActions
 
         target.selectionStyle = .none
         target.addSubview(self)
@@ -199,12 +184,21 @@ open class ActionCell: UIView, ActionSheetDelegate {
         tapGestureRecognizer.numberOfTapsRequired = 1
         tapGestureRecognizer.require(toFail: panGestureRecognizer)
         tapGestureRecognizer.cancelsTouchesInView = false
+        tapGestureRecognizer.isEnabled = false
 
-        initialize()
+        setup()
     }
-
-    func initialize() {
-        clearActionsheet()
+    
+    func setup() {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
+        
+        [actionsheetLeft, actionsheetRight].forEach { (actionsheet) in
+            actionsheet.actions.reversed().forEach {
+                addSubview($0)
+            }
+        }
+        setupActionConstraints()
+        setupActionAttributes()
     }
 
     // MARK: Actionsheet
@@ -214,42 +208,32 @@ open class ActionCell: UIView, ActionSheetDelegate {
 
         if isCurrentActionsheetValid(side: side) {
             contentScreenshot = takeScreenshot()
+            addSubview(contentScreenshot!)
 
             currentActionsheet = getCurrentActionsheet(side: side)
             defaultAction = getDefaultAction(side: side)
             backgroundColor = defaultAction?.backgroundColor ?? UIColor.white
-            currentActionsheet?.actions.reversed().forEach {
-                addSubview($0)
-            }
-            setupActionConstraints()
-            setActionAttributesForClose()
-
-            addSubview(contentScreenshot!)
-
             tapGestureRecognizer.isEnabled = true
         }
     }
 
     /// Clear actionsheet when actionsheet is closed
-    public func clearActionsheet() {
+    public func clearActionsheet(_ completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if isActionSheetOpened {
             backgroundColor = UIColor.clear
+            setActionConstraintsForClose()
             
             defaultAction?.refresh()
             defaultAction = nil
-
-            currentActionsheet?.actions.forEach {
-                $0.removeFromSuperview()
-            }
-            currentActionsheet = nil
-
             contentScreenshot?.removeFromSuperview()
             contentScreenshot = nil
-
+            
+            currentActionsheet = nil
             tapGestureRecognizer.isEnabled = false
         }
+        completionHandler?()
     }
 
     /// Open actionsheet
@@ -274,48 +258,26 @@ open class ActionCell: UIView, ActionSheetDelegate {
     func setupActionConstraints() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
-        removeConstraints(constraints)
-        currentActionsheet?.actions.enumerated().forEach { (index, action) in
-            action.translatesAutoresizingMaskIntoConstraints = false
-            addConstraint(NSLayoutConstraint(item: action, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-            addConstraint(NSLayoutConstraint(item: action, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
-            if let side = currentActionsheet?.side {
-                let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
-                switch animationStyle {
-                case .none:
-                    switch side {
-                    case .left:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: widthPre)
-                        action.constraintLeading = constraintLeading
-                        addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: widthPre + action.width)
-                        action.constraintTrailing = constraintTrailing
-                        addConstraint(constraintTrailing)
-                    case .right:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -1 * (widthPre + action.width))
-                        action.constraintLeading = constraintLeading
-                        addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -1 * widthPre)
-                        action.constraintTrailing = constraintTrailing
-                        addConstraint(constraintTrailing)
-                    }
-                case .ladder, .ladder_emergence, .concurrent:
-                    switch side {
-                    case .left:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: -1 * action.width)
-                        action.constraintLeading = constraintLeading
-                        addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
-                        action.constraintTrailing = constraintTrailing
-                        addConstraint(constraintTrailing)
-                    case .right:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
-                        action.constraintLeading = constraintLeading
-                        addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: action.width)
-                        action.constraintTrailing = constraintTrailing
-                        addConstraint(constraintTrailing)
-                    }
+        [actionsheetLeft, actionsheetRight].forEach { (actionsheet) in
+            actionsheet.actions.enumerated().forEach { (index, action) in
+                action.translatesAutoresizingMaskIntoConstraints = false
+                addConstraint(NSLayoutConstraint(item: action, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+                addConstraint(NSLayoutConstraint(item: action, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
+                switch actionsheet.side {
+                case .left:
+                    let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: -1 * action.width)
+                    action.constraintLeading = constraintLeading
+                    addConstraint(constraintLeading)
+                    let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
+                    action.constraintTrailing = constraintTrailing
+                    addConstraint(constraintTrailing)
+                case .right:
+                    let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
+                    action.constraintLeading = constraintLeading
+                    addConstraint(constraintLeading)
+                    let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: action.width)
+                    action.constraintTrailing = constraintTrailing
+                    addConstraint(constraintTrailing)
                 }
             }
         }
@@ -379,8 +341,6 @@ open class ActionCell: UIView, ActionSheetDelegate {
                     setDefaultActionConstraintsForPosition(position: position)
                 } else {
                     switch animationStyle {
-                    case .none:
-                        break
                     case .ladder, .ladder_emergence:
                         updateSingleActionConstraints(action: action) {
                             let currentActionIndex = ladderingIndex(side: side, position: position)
@@ -429,12 +389,25 @@ open class ActionCell: UIView, ActionSheetDelegate {
     }
 
     // MARK: Action Attributes
+    /// Setup actions' attributes
+    func setupActionAttributes() {
+        isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
+        
+        [actionsheetLeft, actionsheetRight].forEach { (actionsheet) in
+            actionsheet.actions.forEach {
+                $0.setForeAlpha(alpha: 1)
+            }
+        }
+    }
+    
     /// Set actions' attributes for state Close
     func setActionAttributesForClose() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
-        currentActionsheet?.actions.forEach {
-            $0.setForeAlpha(alpha: 1)
+        [actionsheetLeft, actionsheetRight].forEach { (actionsheet) in
+            actionsheet.actions.forEach {
+                $0.setForeAlpha(alpha: 1)
+            }
         }
     }
 
@@ -498,10 +471,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         if let side = currentActionsheet?.side {
             setDefaultActionConstraintsForPosition(position: self.positionForTriggerPrepare(side: side))
             currentActionsheet?.actions.forEach {
-                if $0 == self.defaultAction {
-                    $0.setForeColor(color: self.defaultActionIconColor ?? $0.foreColor)
-                    $0.backgroundColor = self.defaultActionBackColor ?? $0.backColor
-                } else {
+                if $0 != self.defaultAction {
                     $0.alpha = 0
                 }
             }
@@ -532,7 +502,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot {
-            UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForClose()
                 self.setActionConstraintsForClose()
                 self.setActionAttributesForClose()
@@ -550,7 +520,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.setActionConstraintsForOpen()
                 self.setActionAttributesForOpen()
@@ -567,7 +537,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.defaultAction?.refresh()
             }, completion: { finished in
@@ -583,7 +553,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            UIView.animate(withDuration: animationDuration, delay: animationDelay, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
                 contentScreenshot.frame.origin.x = self.positionForTrigger(side: side)
                 self.setDefaultActionConstraintsForPosition(position: self.positionForTrigger(side: side))
             }, completion: { finished in
@@ -623,27 +593,17 @@ open class ActionCell: UIView, ActionSheetDelegate {
     }
 
     /// Actionsheet's animation when action is finished
-    func animateActionFinished() {
+    func animateActionFinished(_ completionHandler: (() -> ())? = nil) {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
-
-        switch animationActionFinished {
-        case .clear:
-            clearActionsheet()
-        case .close:
-            closeActionsheet()
-        }
+        
+        clearActionsheet(completionHandler)
     }
 
     /// Actionsheet's animation when action is cancelled
     func animateActionCancelled() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
-        switch animationActionCancelled {
-        case .clear:
-            clearActionsheet()
-        case .close:
-            closeActionsheet()
-        }
+        closeActionsheet()
     }
 
     // MARK: Action
@@ -912,9 +872,8 @@ extension ActionCell: ActionControlActionDelegate {
     public func didActionTriggered(action: String) {
         isLogEnabled ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
 
-        self.delegate?.didActionTriggered(cell: cell!, action: action)
-        if waitForFinish == false {
-            animateActionFinished()
+        animateActionFinished { [weak self] in
+            self?.delegate?.didActionTriggered(cell: (self?.cell)!, action: action)
         }
     }
 }
@@ -957,7 +916,6 @@ public enum ActionSide {
 }
 
 public enum ActionsheetOpenStyle {
-    case none
     /// 动作按钮阶梯滑出
     case ladder
     /// 动作按钮阶梯滑出 + 图标文字渐显效果
