@@ -48,7 +48,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Colorful actions"
-            let wrapper = UITableViewCellActionWrapper()
+            let wrapper = ActionCell()
             wrapper.actionsLeft = [
                 IconAction(action: "cell 0 -- left 0", iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)),
                 IconAction(action: "cell 0 -- left 1", iconImage: UIImage(named: "1")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)),
@@ -67,7 +67,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Both sides have actions"
-            let wrapper = UITableViewCellActionWrapper()
+            let wrapper = ActionCell()
             wrapper.animationStyle = .ladder_emergence
             wrapper.actionsLeft = [
                 TextAction(action: "cell 1 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)),
@@ -86,7 +86,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Both sides have actions"
-            let wrapper = UITableViewCellActionWrapper()
+            let wrapper = ActionCell()
             wrapper.animationStyle = .ladder_emergence
             wrapper.actionsLeft = [
                 TextAction(action: "cell 2 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
@@ -105,7 +105,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
             cell.textLabel?.text = "Both sides have actions"
-            let wrapper = UITableViewCellActionWrapper()
+            let wrapper = ActionCell()
             wrapper.animationStyle = .ladder_emergence
             wrapper.actionsLeft = [
                 TextAction(action: "cell 3 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
@@ -127,7 +127,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 }
 
-extension ViewController: ActionCellActionDelegate {
+extension ViewController: ActionCellDelegate {
 
     public func didActionTriggered(cell: UITableViewCell, action: String) {
         self.output.text = action + " clicked"

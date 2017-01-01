@@ -8,19 +8,19 @@
 
 import UIKit
 
-public protocol ActionCellActionDelegate: NSObjectProtocol {
+public protocol ActionCellDelegate: NSObjectProtocol {
 
     var tableView: UITableView! { get }
     /// Do something when action is triggered
     func didActionTriggered(cell: UITableViewCell, action: String)
 }
 
-extension ActionCellActionDelegate {
+extension ActionCellDelegate {
     /// Close other cell's actionsheet before open own actionsheet
     func closeActionsheet() {
         tableView.visibleCells.forEach { (cell) in
             cell.subviews.forEach({ (view) in
-                if let wrapper = view as? UITableViewCellActionWrapper {
+                if let wrapper = view as? ActionCell {
                     wrapper.closeActionsheet()
                 }
             })
@@ -40,7 +40,7 @@ public protocol ActionSheetDelegate {
     func closeActionsheet()
 }
 
-open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
+open class ActionCell: UIView, ActionSheetDelegate {
 
     // MARK: Logging
     /// Enable logging debug information
@@ -48,7 +48,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
 
     // MARK: ActionCell - 动作设置
     /// ActionControlActionDelegate
-    public weak var delegate: ActionCellActionDelegate? = nil
+    public weak var delegate: ActionCellDelegate? = nil
 
     /// Actions - Left
     public var actionsLeft: [ActionControl] {
@@ -144,8 +144,6 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     var contentScreenshot: UIImageView?
     /// Current actionsheet
     var currentActionsheet: Actionsheet?
-    /// Container for current actions
-    var actionContainer: UIView = UIView()
     /// The default action to trigger when content is panned to the far side.
     var defaultAction: ActionControl?
     /// The default action is triggered or not
@@ -217,12 +215,11 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         if isCurrentActionsheetValid(side: side) {
             contentScreenshot = takeScreenshot()
 
-            addSubview(actionContainer)
             currentActionsheet = getCurrentActionsheet(side: side)
             defaultAction = getDefaultAction(side: side)
-            actionContainer.backgroundColor = defaultAction?.backgroundColor ?? UIColor.white
+            backgroundColor = defaultAction?.backgroundColor ?? UIColor.white
             currentActionsheet?.actions.reversed().forEach {
-                actionContainer.addSubview($0)
+                addSubview($0)
             }
             setupActionConstraints()
             setActionAttributesForClose()
@@ -238,6 +235,8 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if isActionSheetOpened {
+            backgroundColor = UIColor.clear
+            
             defaultAction?.refresh()
             defaultAction = nil
 
@@ -245,7 +244,6 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
                 $0.removeFromSuperview()
             }
             currentActionsheet = nil
-            actionContainer.removeFromSuperview()
 
             contentScreenshot?.removeFromSuperview()
             contentScreenshot = nil
@@ -276,57 +274,53 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     func setupActionConstraints() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
-        actionContainer.translatesAutoresizingMaskIntoConstraints = false
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: .alignAllLastBaseline, metrics: nil, views: ["container" : actionContainer]))
-
-        actionContainer.removeConstraints(actionContainer.constraints)
+        removeConstraints(constraints)
         currentActionsheet?.actions.enumerated().forEach { (index, action) in
             action.translatesAutoresizingMaskIntoConstraints = false
-            actionContainer.addConstraint(NSLayoutConstraint(item: action, attribute: .top, relatedBy: .equal, toItem: actionContainer, attribute: .top, multiplier: 1, constant: 0))
-            actionContainer.addConstraint(NSLayoutConstraint(item: action, attribute: .bottom, relatedBy: .equal, toItem: actionContainer, attribute: .bottom, multiplier: 1, constant: 0))
+            addConstraint(NSLayoutConstraint(item: action, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+            addConstraint(NSLayoutConstraint(item: action, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
             if let side = currentActionsheet?.side {
                 let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
                 switch animationStyle {
                 case .none:
                     switch side {
                     case .left:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: actionContainer, attribute: .leading, multiplier: 1, constant: widthPre)
+                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: widthPre)
                         action.constraintLeading = constraintLeading
-                        actionContainer.addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: actionContainer, attribute: .leading, multiplier: 1, constant: widthPre + action.width)
+                        addConstraint(constraintLeading)
+                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: widthPre + action.width)
                         action.constraintTrailing = constraintTrailing
-                        actionContainer.addConstraint(constraintTrailing)
+                        addConstraint(constraintTrailing)
                     case .right:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: actionContainer, attribute: .trailing, multiplier: 1, constant: -1 * (widthPre + action.width))
+                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -1 * (widthPre + action.width))
                         action.constraintLeading = constraintLeading
-                        actionContainer.addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: actionContainer, attribute: .trailing, multiplier: 1, constant: -1 * widthPre)
+                        addConstraint(constraintLeading)
+                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -1 * widthPre)
                         action.constraintTrailing = constraintTrailing
-                        actionContainer.addConstraint(constraintTrailing)
+                        addConstraint(constraintTrailing)
                     }
                 case .ladder, .ladder_emergence, .concurrent:
                     switch side {
                     case .left:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: actionContainer, attribute: .leading, multiplier: 1, constant: -1 * action.width)
+                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: -1 * action.width)
                         action.constraintLeading = constraintLeading
-                        actionContainer.addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: actionContainer, attribute: .leading, multiplier: 1, constant: 0)
+                        addConstraint(constraintLeading)
+                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
                         action.constraintTrailing = constraintTrailing
-                        actionContainer.addConstraint(constraintTrailing)
+                        addConstraint(constraintTrailing)
                     case .right:
-                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: actionContainer, attribute: .trailing, multiplier: 1, constant: 0)
+                        let constraintLeading = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
                         action.constraintLeading = constraintLeading
-                        actionContainer.addConstraint(constraintLeading)
-                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: actionContainer, attribute: .trailing, multiplier: 1, constant: action.width)
+                        addConstraint(constraintLeading)
+                        let constraintTrailing = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: action.width)
                         action.constraintTrailing = constraintTrailing
-                        actionContainer.addConstraint(constraintTrailing)
+                        addConstraint(constraintTrailing)
                     }
                 }
             }
         }
-        actionContainer.setNeedsLayout()
-        actionContainer.layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     /// Set actions' constraints for state Close
@@ -347,8 +341,8 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
                 }
             }
         })
-        actionContainer.setNeedsLayout()
-        actionContainer.layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     /// Set actions' constraints for state Open
@@ -370,8 +364,8 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
                 }
             }
         })
-        actionContainer.setNeedsLayout()
-        actionContainer.layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     /// Get actions' constraints for position
@@ -430,8 +424,8 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
                 }
             }
         })
-        actionContainer.setNeedsLayout()
-        actionContainer.layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     // MARK: Action Attributes
@@ -493,8 +487,8 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
                 defaultAction?.constraintTrailing?.constant = 0
             }
         }
-        actionContainer.setNeedsLayout()
-        actionContainer.layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 
     /// Animate when default action is triggered
@@ -686,9 +680,9 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     /// Update single action's constraints
     func updateSingleActionConstraints(action: ActionControl, updateClosure: () -> ()) {
         if let constraintLeading = action.constraintLeading, let constraintTrailing = action.constraintTrailing {
-            actionContainer.removeConstraints([constraintLeading, constraintTrailing])
+            removeConstraints([constraintLeading, constraintTrailing])
             updateClosure()
-            actionContainer.addConstraints([constraintLeading, constraintTrailing])
+            addConstraints([constraintLeading, constraintTrailing])
         }
     }
 
@@ -789,7 +783,7 @@ open class UITableViewCellActionWrapper: UIView, ActionSheetDelegate {
     }
 }
 
-extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
+extension ActionCell: UIGestureRecognizerDelegate {
 
     // MARK: UIGestureRecognizerDelegate
     open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -914,7 +908,7 @@ extension UITableViewCellActionWrapper: UIGestureRecognizerDelegate {
     }
 }
 
-extension UITableViewCellActionWrapper: ActionControlActionDelegate {
+extension ActionCell: ActionControlActionDelegate {
     public func didActionTriggered(action: String) {
         isLogEnabled ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
 
@@ -925,7 +919,7 @@ extension UITableViewCellActionWrapper: ActionControlActionDelegate {
     }
 }
 
-extension UITableViewCellActionWrapper: ActionResultDelegate {
+extension ActionCell: ActionResultDelegate {
 
     public func actionFinished(cancelled: Bool) {
         isLogEnabled ? { print("\(#function) -- " + "action " + (cancelled ? "cancelled" : "finished")) }() : {}()
