@@ -47,12 +47,12 @@ open class ActionCell: UIView, ActionSheetDelegate {
     var isLogEnabled: Bool = true
 
     // MARK: ActionCell - 动作设置
-    /// ActionControlActionDelegate
+    /// ActionCellDelegate
     public weak var delegate: ActionCellDelegate? = nil
 
-    // MARK: ActionCell - 样式设置
-    /// Action 动画形式
-    public var animationStyle: ActionsheetOpenStyle = .concurrent
+    // MARK: ActionCell - 行为设置
+    /// Enable default action to be triggered when the content is panned to far enough
+    public var enableDefaultAction: Bool = true
     /// The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
     public var defaultActionTriggerPropotion: CGFloat = 0.3 {
         willSet {
@@ -62,25 +62,11 @@ open class ActionCell: UIView, ActionSheetDelegate {
         }
     }
 
-    // MARK: ActionCell - 行为设置
-    /// Enable default action to be triggered when the content is panned to far enough
-    public var enableDefaultAction: Bool = true
-
     // MARK: ActionCell - 动画设置
+    /// Action 动画形式
+    public var animationStyle: ActionsheetOpenStyle = .concurrent
     /// Spring animation - duration of the animation
     public var animationDuration: TimeInterval = 0.3
-    /// Spring animation - spring damping of the animation
-    public var springDamping: CGFloat = 1 {
-        willSet {
-            guard newValue > 0 else {
-                fatalError("springDamping -- value is not valid, value must be greater than 0")
-            }
-        }
-    }
-    /// Spring animation - initial spring velocity of the animation
-    public var initialSpringVelocity: CGFloat = 20
-    /// Spring animation - options of the animation
-    public var animationOptions: UIViewAnimationOptions = .curveLinear
 
     // MARK: ActionCell - 私有属性
     /// cell
@@ -502,7 +488,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot {
-            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, animations: {
                 contentScreenshot.frame.origin.x = self.positionForClose()
                 self.setActionConstraintsForClose()
                 self.setActionAttributesForClose()
@@ -520,7 +506,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.setActionConstraintsForOpen()
                 self.setActionAttributesForOpen()
@@ -537,7 +523,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.defaultAction?.refresh()
             }, completion: { finished in
@@ -553,7 +539,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            UIView.animate(withDuration: animationDuration, delay: 0, usingSpringWithDamping: springDamping, initialSpringVelocity: initialSpringVelocity, options: animationOptions, animations: {
+            UIView.animate(withDuration: animationDuration, animations: {
                 contentScreenshot.frame.origin.x = self.positionForTrigger(side: side)
                 self.setDefaultActionConstraintsForPosition(position: self.positionForTrigger(side: side))
             }, completion: { finished in
