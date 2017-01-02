@@ -905,13 +905,6 @@ public enum ActionsheetOpenStyle {
     case concurrent
 }
 
-public enum ActionsheetCloseStyle {
-    /// Reset actionsheet immediately
-    case clear
-    /// Close actionsheet slowly
-    case close
-}
-
 public enum PositionSection {
     case close_OpenPre
     case openPre_Open

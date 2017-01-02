@@ -165,7 +165,7 @@ open class TextAction: ActionControl {
         
         switch state {
         case .outside:
-            label.alpha = 0
+            label.alpha = 1
         case .inside:
             label.alpha = 1
         case let .outside_inside(progress):
