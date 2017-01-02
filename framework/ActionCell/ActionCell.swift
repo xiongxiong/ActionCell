@@ -125,34 +125,6 @@ open class ActionCell: UIView {
     var defaultAction: ActionControl?
     /// The default action is triggered or not
     var isDefaultActionTriggered: Bool = false
-
-    // MARK: Computed properties
-    /// Actions - Left
-    var actionsLeft: [ActionControl] {
-        get {
-            return actionsheetLeft.actions
-        }
-        set {
-            actionsheetLeft.actions = newValue
-            actionsheetLeft.actions.forEach {
-                $0.delegate = self
-            }
-        }
-    }
-
-    /// Actions - Right
-    var actionsRight: [ActionControl] {
-        get {
-            return actionsheetRight.actions
-        }
-        set {
-            actionsheetRight.actions = newValue
-            actionsheetRight.actions.forEach {
-                $0.delegate = self
-            }
-        }
-    }
-
     /// ActionSheet opened or not
     open var isActionSheetOpened: Bool {
         return currentActionsheet != nil
@@ -258,6 +230,7 @@ open class ActionCell: UIView {
 
         actionsheet(side: side).actions = actions
         actionsheet(side: side).actions.reversed().forEach {
+            $0.delegate = self
             addSubview($0)
         }
         setupActionConstraints(side: side)
