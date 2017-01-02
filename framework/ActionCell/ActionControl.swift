@@ -45,10 +45,18 @@ open class ActionControl: UIControl {
     
     /// Action is triggered
     func actionTriggered() {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "action: \(action)")
+        #endif
+        
         delegate?.didActionTriggered(action: action)
     }
     
     func setState(_ state: State) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "state: \(state)")
+        #endif
+        
         switch state {
         case .outside:
             alpha = 1

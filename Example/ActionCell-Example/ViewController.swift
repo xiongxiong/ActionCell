@@ -52,12 +52,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             wrapper.delegate = self
             wrapper.animationStyle = .ladder
             wrapper.wrap(cell: cell, 
-                         leftActions: [
+                         actionsLeft: [
                             TextAction(action: "cell 1 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)),
                             TextAction(action: "cell 1 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
                             TextAction(action: "cell 1 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             ], 
-                         rightActions: [
+                         actionsRight: [
                             TextAction(action: "cell 1 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
                             TextAction(action: "cell 1 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             TextAction(action: "cell 1 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
@@ -70,12 +70,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             wrapper.delegate = self
             wrapper.animationStyle = .ladder_emergence
             wrapper.wrap(cell: cell,
-                         leftActions: [
+                         actionsLeft: [
                             TextAction(action: "cell 2 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
                             TextAction(action: "cell 2 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
                             TextAction(action: "cell 2 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             ],
-                         rightActions: [
+                         actionsRight: [
                             TextAction(action: "cell 2 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
                             TextAction(action: "cell 2 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             TextAction(action: "cell 2 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
@@ -88,12 +88,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             wrapper.delegate = self
             wrapper.animationStyle = .concurrent
             wrapper.wrap(cell: cell,
-                         leftActions: [
+                         actionsLeft: [
                             TextAction(action: "cell 3 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
                             TextAction(action: "cell 3 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
                             TextAction(action: "cell 3 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             ],
-                         rightActions: [
+                         actionsRight: [
                             TextAction(action: "cell 3 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
                             TextAction(action: "cell 3 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             TextAction(action: "cell 3 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
@@ -111,10 +111,10 @@ extension ViewController: ActionCellDelegate {
         self.output.text = action + " clicked"
         let alert = UIAlertController(title: "Select", message: "Select any", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
-            (cell as? ActionResultDelegate)?.actionFinished(cancelled: false)
+            cell.actionFinished(cancelled: false)
         }))
         alert.addAction(UIAlertAction(title: "cancel", style: .default, handler: { (action) in
-            (cell as? ActionResultDelegate)?.actionFinished(cancelled: true)
+            cell.actionFinished(cancelled: true)
         }))
         present(alert, animated: true, completion: nil)
     }
