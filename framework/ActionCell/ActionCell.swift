@@ -33,14 +33,7 @@ public protocol ActionResultDelegate {
     func actionFinished(cancelled: Bool)
 }
 
-public protocol ActionSheetDelegate {
-    /// Open actionsheet
-    func openActionsheet(side: ActionSide)
-    /// Close actionsheet
-    func closeActionsheet()
-}
-
-open class ActionCell: UIView, ActionSheetDelegate {
+open class ActionCell: UIView {
 
     // MARK: Logging
     /// Enable logging debug information
