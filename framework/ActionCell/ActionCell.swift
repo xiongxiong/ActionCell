@@ -620,10 +620,8 @@ open class ActionCell: UIView {
                     if finished {
                         completionHandler?()
                         self.enableGestureRecognizers(true)
-                        if let defaultAction = self.defaultAction {
-                            self.clearActionCell {
-                                defaultAction.actionTriggered()
-                            }
+                        self.clearActionCell {
+                            self.defaultAction?.actionTriggered()
                         }
                     }
             })
@@ -935,6 +933,7 @@ extension ActionCell: UIGestureRecognizerDelegate {
         swipeLeftGestureRecognizer.isEnabled = isEnabled
         swipeRightGestureRecognizer.isEnabled = isEnabled
         panGestureRecognizer.isEnabled = isEnabled
+        tapGestureRecognizer.isEnabled = isEnabled
     }
 }
 
