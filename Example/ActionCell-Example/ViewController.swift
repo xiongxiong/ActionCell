@@ -55,12 +55,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                          actionsLeft: [
                             TextAction(action: "cell 1 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)),
                             TextAction(action: "cell 1 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
-                            TextAction(action: "cell 1 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            TextAction(action: "cell 1 -- left 2", labelText: "World", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             ], 
                          actionsRight: [
                             TextAction(action: "cell 1 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
-                            TextAction(action: "cell 1 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            TextAction(action: "cell 1 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
+                            TextAction(action: "cell 1 -- right 1", labelText: "Long Sentence", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            TextAction(action: "cell 1 -- right 2", labelText: "World", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
                             ])
             return cell
         case 1:
@@ -73,12 +73,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                          actionsLeft: [
                             TextAction(action: "cell 2 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
                             TextAction(action: "cell 2 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            TextAction(action: "cell 2 -- left 2", labelText: "World", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             ],
                          actionsRight: [
                             TextAction(action: "cell 2 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
+                            TextAction(action: "cell 2 -- right 1", labelText: "Long Sentence", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            TextAction(action: "cell 2 -- right 2", labelText: "World", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
                             ])
             return cell
         case 2:
@@ -91,12 +91,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                          actionsLeft: [
                             TextAction(action: "cell 3 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
                             TextAction(action: "cell 3 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- left 2", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            TextAction(action: "cell 3 -- left 2", labelText: "World", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
                             ],
                          actionsRight: [
                             TextAction(action: "cell 3 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- right 1", labelText: "Hello", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- right 2", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
+                            TextAction(action: "cell 3 -- right 1", labelText: "Long Sentence", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            TextAction(action: "cell 3 -- right 2", labelText: "World", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
                             ])
             return cell
         default:
@@ -109,13 +109,5 @@ extension ViewController: ActionCellDelegate {
 
     public func didActionTriggered(cell: UITableViewCell, action: String) {
         self.output.text = action + " clicked"
-        let alert = UIAlertController(title: "Select", message: "Select any", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { (action) in
-            cell.actionFinished(cancelled: false)
-        }))
-        alert.addAction(UIAlertAction(title: "cancel", style: .default, handler: { (action) in
-            cell.actionFinished(cancelled: true)
-        }))
-        present(alert, animated: true, completion: nil)
     }
 }
