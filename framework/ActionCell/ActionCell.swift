@@ -28,9 +28,17 @@ extension ActionCellDelegate {
     }
 }
 
-public protocol ActionResultDelegate {
+public protocol ActionSheetDelegate: NSObjectProtocol {
+    
+}
+
+public protocol ActionResultDelegate: NSObjectProtocol {
     /// When action finished or cancelled, reset actionsheet accordingly
     func actionFinished(cancelled: Bool)
+}
+
+extension UITableViewCell: ActionResultDelegate {
+    
 }
 
 open class ActionCell: UIView {
