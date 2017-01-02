@@ -147,6 +147,7 @@ open class ActionCell: UIView {
         addGestureRecognizer(swipeRightGestureRecognizer)
         swipeRightGestureRecognizer.delegate = self
         swipeRightGestureRecognizer.direction = .right
+        swipeRightGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGestureRecognizer(_:)))
         addGestureRecognizer(panGestureRecognizer)
@@ -158,10 +159,10 @@ open class ActionCell: UIView {
         addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.numberOfTapsRequired = 1
+        tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         tapGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         tapGestureRecognizer.require(toFail: panGestureRecognizer)
-        tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.isEnabled = false
         
         setupActionSheet(side: .left, actions: actionsLeft)
@@ -181,7 +182,7 @@ open class ActionCell: UIView {
             
             currentActionsheet = actionsheet(side: side)
             defaultAction = defaultAction(side: side)
-            backgroundColor = UIColor.white
+            backgroundColor = defaultAction?.backgroundColor
             tapGestureRecognizer.isEnabled = true
         }
     }
@@ -480,14 +481,14 @@ open class ActionCell: UIView {
             print("\(#function) -- " + "")
         #endif
         
-        if let side = currentActionsheet?.side {
+        if let side = currentActionsheet?.side, let defaultAction = defaultAction {
             switch side {
             case .left:
-                defaultAction?.constraintTrailing?.constant = position
-                defaultAction?.constraintLeading?.constant = 0
+                defaultAction.constraintTrailing?.constant = position
+                defaultAction.constraintLeading?.constant = position - defaultAction.width
             case .right:
-                defaultAction?.constraintLeading?.constant = position
-                defaultAction?.constraintTrailing?.constant = 0
+                defaultAction.constraintLeading?.constant = position
+                defaultAction.constraintTrailing?.constant = position + defaultAction.width
             }
         }
         setNeedsLayout()
@@ -507,10 +508,12 @@ open class ActionCell: UIView {
         }
         if let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
+                self.enableGestureRecognizers(false)
                 self.setDefaultActionConstraintsForPosition(position: self.positionForTriggerPrepare(side: side))
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.enableGestureRecognizers(true)
                     }
             })
         }
@@ -524,10 +527,12 @@ open class ActionCell: UIView {
         
         if let side = currentActionsheet?.side, let contentScreenshot = contentScreenshot {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
+                self.enableGestureRecognizers(false)
                 self.setActionConstraintsForPosition(position: contentScreenshot.frame.origin.x)
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.enableGestureRecognizers(true)
                         self.actionsheet(side: side).actions.forEach {
                             $0.setState(.inside)
                         }
@@ -545,12 +550,14 @@ open class ActionCell: UIView {
         
         if let contentScreenshot = contentScreenshot {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
+                self.enableGestureRecognizers(false)
                 contentScreenshot.frame.origin.x = self.positionForClose()
                 self.setActionConstraintsForClose()
                 self.setActionAttributesForClose()
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.enableGestureRecognizers(true)
                         self.clearActionCell()
                     }
             })
@@ -565,12 +572,14 @@ open class ActionCell: UIView {
         
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
+                self.enableGestureRecognizers(false)
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.setActionConstraintsForOpen()
                 self.setActionAttributesForOpen()
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.enableGestureRecognizers(true)
                     }
             })
         }
@@ -584,11 +593,13 @@ open class ActionCell: UIView {
         
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
+                self.enableGestureRecognizers(false)
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.defaultAction?.setState(.inside)
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.enableGestureRecognizers(true)
                     }
             })
         }
@@ -602,11 +613,13 @@ open class ActionCell: UIView {
         
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
+                self.enableGestureRecognizers(false)
                 contentScreenshot.frame.origin.x = self.positionForTrigger(side: side)
                 self.setDefaultActionConstraintsForPosition(position: self.positionForTrigger(side: side))
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.enableGestureRecognizers(true)
                         if let defaultAction = self.defaultAction {
                             self.clearActionCell {
                                 defaultAction.actionTriggered()
@@ -915,6 +928,13 @@ extension ActionCell: UIGestureRecognizerDelegate {
                 }
             }
         }
+    }
+    
+    /// Enable or disable gesture recognizers
+    func enableGestureRecognizers(_ isEnabled: Bool) {
+        swipeLeftGestureRecognizer.isEnabled = isEnabled
+        swipeRightGestureRecognizer.isEnabled = isEnabled
+        panGestureRecognizer.isEnabled = isEnabled
     }
 }
 
