@@ -47,7 +47,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         switch (indexPath as NSIndexPath).row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
-            cell.textLabel?.text = "Both sides have actions"
+            cell.textLabel?.text = "style: ladder"
             let wrapper = ActionCell()
             wrapper.delegate = self
             wrapper.animationStyle = .ladder
@@ -65,7 +65,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
-            cell.textLabel?.text = "Both sides have actions"
+            cell.textLabel?.text = "style: ladder_emergence"
             let wrapper = ActionCell()
             wrapper.delegate = self
             wrapper.animationStyle = .ladder_emergence
@@ -83,7 +83,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
-            cell.textLabel?.text = "Both sides have actions"
+            cell.textLabel?.text = "style: concurrent"
             let wrapper = ActionCell()
             wrapper.delegate = self
             wrapper.animationStyle = .concurrent

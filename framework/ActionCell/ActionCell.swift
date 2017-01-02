@@ -175,7 +175,7 @@ open class ActionCell: UIView {
             print("\(#function) -- " + "")
         #endif
         
-        if isCurrentActionsheetValid(side: side) {
+        if isActionsheetValid(side: side) {
             contentScreenshot = takeScreenshot()
             addSubview(contentScreenshot!)
             
@@ -311,7 +311,7 @@ open class ActionCell: UIView {
         
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
-                let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
+                let widthPre = currentActionsheet?.actionWidthBefore(actionIndex: index) ?? 0
                 updateSingleActionConstraints(action: action) {
                     switch side {
                     case .left:
@@ -336,51 +336,72 @@ open class ActionCell: UIView {
         
         currentActionsheet?.actions.enumerated().forEach({ (index, action) in
             if let side = currentActionsheet?.side {
-                let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
+                let widthPre = currentActionsheet?.actionWidthBefore(actionIndex: index) ?? 0
                 if isDefaultActionTriggered && action == defaultAction {
                     setDefaultActionConstraintsForPosition(position: position)
                 } else {
-                    switch animationStyle {
-                    case .ladder, .ladder_emergence:
-                        updateSingleActionConstraints(action: action) {
-                            let currentActionIndex = ladderingIndex(side: side, position: position)
-                            if index >= currentActionIndex {
-                                switch side {
-                                case .left:
-                                    action.constraintTrailing?.constant = position
-                                    action.constraintLeading?.constant = position - action.width
-                                case .right:
-                                    action.constraintLeading?.constant = position
-                                    action.constraintTrailing?.constant = position + action.width
+                    switch positionSection(side: side, position: position) {
+                    case .close_OpenPre, .openPre_Open:
+                        switch animationStyle {
+                        case .ladder, .ladder_emergence:
+                            updateSingleActionConstraints(action: action) {
+                                let currentActionIndex = ladderingIndex(side: side, position: position)
+                                if index >= currentActionIndex {
+                                    switch side {
+                                    case .left:
+                                        action.constraintTrailing?.constant = position
+                                        action.constraintLeading?.constant = position - action.width
+                                    case .right:
+                                        action.constraintLeading?.constant = position
+                                        action.constraintTrailing?.constant = position + action.width
+                                    }
+                                } else {
+                                    switch side {
+                                    case .left:
+                                        action.constraintTrailing?.constant = widthPre + action.width
+                                        action.constraintLeading?.constant = widthPre
+                                    case .right:
+                                        action.constraintLeading?.constant = -1 * (widthPre + action.width)
+                                        action.constraintTrailing?.constant = -1 * widthPre
+                                    }
                                 }
-                            } else {
+                            }
+                        case .concurrent:
+                            var targetPosition = position
+                            if abs(targetPosition) > abs(positionForOpen(side: side)) {
+                                targetPosition = positionForOpen(side: side)
+                            }
+                            updateSingleActionConstraints(action: action) {
+                                let actionAnchorPosition = targetPosition * (actionsheet(side: side).actionWidthBefore(actionIndex: index) + action.width) / actionsheet(side: side).width
                                 switch side {
                                 case .left:
-                                    action.constraintTrailing?.constant = widthPre + action.width
-                                    action.constraintLeading?.constant = widthPre
+                                    action.constraintTrailing?.constant = actionAnchorPosition
+                                    action.constraintLeading?.constant = actionAnchorPosition - action.width
                                 case .right:
-                                    action.constraintLeading?.constant = -1 * (widthPre + action.width)
-                                    action.constraintTrailing?.constant = -1 * widthPre
+                                    action.constraintLeading?.constant = actionAnchorPosition
+                                    action.constraintTrailing?.constant = actionAnchorPosition + action.width
                                 }
                             }
                         }
-                    case .concurrent:
-                        var targetPosition = position
-                        if abs(targetPosition) > abs(positionForOpen(side: side)) {
-                            targetPosition = positionForOpen(side: side)
+                    case .open_TriggerPre:
+                        switch side {
+                        case .left:
+                            action.constraintTrailing?.constant = position - actionsheet(side: side).actionWidthAfter(actionIndex: index)
+                        case .right:
+                            action.constraintLeading?.constant = position + actionsheet(side: side).actionWidthAfter(actionIndex: index)
                         }
-                        updateSingleActionConstraints(action: action) {
-                            let actionTrailingPosition = targetPosition * (actionsheet(side: side).actionPreWidth(actionIndex: index) + action.width) / actionsheet(side: side).width
+                        if action != defaultAction {
                             switch side {
                             case .left:
-                                action.constraintTrailing?.constant = actionTrailingPosition
-                                action.constraintLeading?.constant = actionTrailingPosition - action.width
+                                action.constraintLeading?.constant = position - actionsheet(side: side).actionWidthAfter(actionIndex: index) - action.width
                             case .right:
-                                action.constraintLeading?.constant = actionTrailingPosition
-                                action.constraintTrailing?.constant = actionTrailingPosition + action.width
+                                action.constraintTrailing?.constant = position + actionsheet(side: side).actionWidthAfter(actionIndex: index) + action.width
                             }
                         }
+                    default:
+                        break
                     }
+                    
                 }
             }
         })
@@ -430,15 +451,20 @@ open class ActionCell: UIView {
         
         currentActionsheet?.actions.enumerated().forEach { (index, action) in
             if let side = currentActionsheet?.side {
-                let widthPre = currentActionsheet?.actionPreWidth(actionIndex: index) ?? 0
-                switch animationStyle {
-                case .ladder_emergence:
-                    let currentLadderIndex = ladderingIndex(side: side, position: position)
-                    if index == currentLadderIndex {
-                        let progress = ((abs(position) - widthPre) / action.width).truncatingRemainder(dividingBy: 1)
-                        action.setState(.outside_inside(progress: progress))
-                    } else if index < currentLadderIndex {
-                        action.setState(.inside)
+                switch positionSection(side: side, position: position) {
+                case .close_OpenPre, .openPre_Open:
+                    let widthPre = currentActionsheet?.actionWidthBefore(actionIndex: index) ?? 0
+                    switch animationStyle {
+                    case .ladder_emergence:
+                        let currentLadderIndex = ladderingIndex(side: side, position: position)
+                        if index == currentLadderIndex {
+                            let progress = ((abs(position) - widthPre) / action.width).truncatingRemainder(dividingBy: 1)
+                            action.setState(.outside_inside(progress: progress))
+                        } else if index < currentLadderIndex {
+                            action.setState(.inside)
+                        }
+                    default:
+                        break
                     }
                 default:
                     break
@@ -457,8 +483,8 @@ open class ActionCell: UIView {
         if let side = currentActionsheet?.side {
             switch side {
             case .left:
-                defaultAction?.constraintLeading?.constant = 0
                 defaultAction?.constraintTrailing?.constant = position
+                defaultAction?.constraintLeading?.constant = 0
             case .right:
                 defaultAction?.constraintLeading?.constant = position
                 defaultAction?.constraintTrailing?.constant = 0
@@ -474,14 +500,14 @@ open class ActionCell: UIView {
             print("\(#function) -- " + "")
         #endif
         
+        self.currentActionsheet?.actions.forEach {
+            if $0 != self.defaultAction {
+                $0.setState(.inactive)
+            }
+        }
         if let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
                 self.setDefaultActionConstraintsForPosition(position: self.positionForTriggerPrepare(side: side))
-                self.currentActionsheet?.actions.forEach {
-                    if $0 != self.defaultAction {
-                        $0.setState(.inactive)
-                    }
-                }
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
@@ -496,15 +522,15 @@ open class ActionCell: UIView {
             print("\(#function) -- " + "")
         #endif
         
-        if (currentActionsheet?.side) != nil {
+        if let side = currentActionsheet?.side, let contentScreenshot = contentScreenshot {
             UIView.animate(withDuration: animationDuration, animations: { [unowned self] in
-                self.setActionConstraintsForOpen()
-                self.currentActionsheet?.actions.forEach {
-                    $0.setState(.inside)
-                }
+                self.setActionConstraintsForPosition(position: contentScreenshot.frame.origin.x)
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
+                        self.actionsheet(side: side).actions.forEach {
+                            $0.setState(.inside)
+                        }
                     }
             })
         }
@@ -581,8 +607,10 @@ open class ActionCell: UIView {
                 }, completion: { finished in
                     if finished {
                         completionHandler?()
-                        self.clearActionCell {
-                            self.defaultAction?.actionTriggered()
+                        if let defaultAction = self.defaultAction {
+                            self.clearActionCell {
+                                defaultAction.actionTriggered()
+                            }
                         }
                     }
             })
@@ -619,7 +647,7 @@ open class ActionCell: UIView {
     }
     
     // MARK: Action
-    /// Get current actionsheet
+    /// Get actionsheet
     func actionsheet(side: ActionSide) -> Actionsheet {
         switch side {
         case .left:
@@ -629,7 +657,7 @@ open class ActionCell: UIView {
         }
     }
     
-    /// Get current side actions
+    /// Get action sheet actions
     func actionsheetActions(side: ActionSide) -> [ActionControl] {
         return actionsheet(side: side).actions
     }
@@ -644,8 +672,8 @@ open class ActionCell: UIView {
         }
     }
     
-    /// Does current side have actions to show
-    func isCurrentActionsheetValid(side: ActionSide) -> Bool {
+    /// Does action sheet have actions to show
+    func isActionsheetValid(side: ActionSide) -> Bool {
         return actionsheet(side: side).actions.count > 0
     }
     
@@ -720,7 +748,7 @@ open class ActionCell: UIView {
         
         var result: [(Int, ActionControl)] = []
         result = actionsheetActions(side: side).enumerated().filter({ (index, action) -> Bool in
-            let widthPre = actionsheet(side: side).actionPreWidth(actionIndex: index)
+            let widthPre = actionsheet(side: side).actionWidthBefore(actionIndex: index)
             return abs(position) >= widthPre && abs(position) < widthPre + action.width
         })
         if let currentAction = result.first {
@@ -830,7 +858,7 @@ extension ActionCell: UIGestureRecognizerDelegate {
                 }
             }
             
-            if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side , isCurrentActionsheetValid(side: side) {
+            if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side , isActionsheetValid(side: side) {
                 let openPosition = positionForOpen(side: side)
                 
                 contentScreenshot.frame.origin.x += translation.x
@@ -896,8 +924,12 @@ extension ActionCell: ActionControlDelegate {
             print("\(#function) -- " + "action: \(action)")
         #endif
 
-        closeActionsheet() { [unowned self] in
-            self.delegate?.didActionTriggered(cell: self.cell!, action: action)
+        if currentActionsheet != nil {
+            closeActionsheet() { [unowned self] in
+                self.delegate?.didActionTriggered(cell: self.cell!, action: action)
+            }
+        } else {
+            delegate?.didActionTriggered(cell: cell!, action: action)
         }
     }
 }
@@ -918,8 +950,15 @@ public class Actionsheet {
     }
     
     /// sum of width of actions which is previous to the action
-    func actionPreWidth(actionIndex index: Int) -> CGFloat {
+    func actionWidthBefore(actionIndex index: Int) -> CGFloat {
         return actions.prefix(upTo: index).reduce(0, { (result, action) -> CGFloat in
+            result + action.width
+        })
+    }
+    
+    /// sum of width of actions which is previous to the action
+    func actionWidthAfter(actionIndex index: Int) -> CGFloat {
+        return actions.suffix(from: index + 1).reduce(0, { (result, action) -> CGFloat in
             result + action.width
         })
     }
