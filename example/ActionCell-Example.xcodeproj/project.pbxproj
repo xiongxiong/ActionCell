@@ -15,6 +15,7 @@
 		422E71151D8F56BA00307E3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		422E71201D8F56BA00307E3A /* ActionCell_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E711F1D8F56BA00307E3A /* ActionCell_ExampleTests.swift */; };
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
+		42CA4FDB1E19D1C20063CDB8 /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				42CA4FDB1E19D1C20063CDB8 /* ActionCell.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;

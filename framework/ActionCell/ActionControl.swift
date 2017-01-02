@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol ActionControlActionDelegate: NSObjectProtocol {
+public protocol ActionControlDelegate: NSObjectProtocol {
     func didActionTriggered(action: String)
 }
 
@@ -20,11 +20,9 @@ open class ActionControl: UIControl {
     var width: CGFloat
     
     /// Delegate
-    weak var delegate: ActionControlActionDelegate? = nil
+    weak var delegate: ActionControlDelegate? = nil
     weak var constraintLeading: NSLayoutConstraint? = nil
     weak var constraintTrailing: NSLayoutConstraint? = nil
-    weak var iconConstraintWidth: NSLayoutConstraint? = nil
-    weak var iconConstraintHeight: NSLayoutConstraint? = nil
     
     public init(action: String, foreColor: UIColor, backColor: UIColor, width: CGFloat) {
         self.action = action
@@ -45,31 +43,35 @@ open class ActionControl: UIControl {
         removeTarget(self, action: #selector(actionTriggered), for: .touchUpInside)
     }
     
-    open override func removeFromSuperview() {
-        super.removeFromSuperview()
-        
-        alpha = 1
-        
-        constraintLeading = nil
-        constraintTrailing = nil
-    }
-    
-    /// Reset attributes to initial state
-    open func refresh() {
-        backgroundColor = backColor
-    }
-    
     /// Action is triggered
     func actionTriggered() {
         delegate?.didActionTriggered(action: action)
     }
     
-    public func setForeColor(color: UIColor) {
-        
+    func setState(_ state: State) {
+        switch state {
+        case .outside:
+            alpha = 1
+        case .inside:
+            alpha = 1
+        case .active:
+            alpha = 1
+        case .inactive:
+            alpha = 0
+        default:
+            break
+        }
     }
+}
+
+extension ActionControl {
     
-    public func setForeAlpha(alpha: CGFloat) {
-       
+    enum State {
+        case outside // action stands outside of the cell
+        case outside_inside(progress: CGFloat) // action state between outside & inside, progress is between 0 & 1
+        case inside // action stands inside of the cell
+        case active // action is to be triggered
+        case inactive // other action is to be triggered, and this not
     }
 }
 
@@ -89,12 +91,8 @@ open class IconAction: ActionControl {
         icon.translatesAutoresizingMaskIntoConstraints = false
         addConstraint(NSLayoutConstraint(item: icon, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: icon, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
-        let constraintWidth = NSLayoutConstraint(item: icon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 0, constant: iconSize.width)
-        iconConstraintWidth = constraintWidth
-        addConstraint(constraintWidth)
-        let constraintHeight = NSLayoutConstraint(item: icon, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 0, constant: iconSize.height)
-        iconConstraintHeight = constraintHeight
-        addConstraint(constraintHeight)
+        addConstraint(NSLayoutConstraint(item: icon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 0, constant: iconSize.width))
+        addConstraint(NSLayoutConstraint(item: icon, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 0, constant: iconSize.height))
         
         icon.image = iconImage.withRenderingMode(.alwaysTemplate)
         icon.tintColor = foreColor
@@ -104,29 +102,19 @@ open class IconAction: ActionControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open override func removeFromSuperview() {
-        super.removeFromSuperview()
+    override func setState(_ state: ActionControl.State) {
+        super.setState(state)
         
-        icon.alpha = 1
-    }
-    
-    open override func refresh() {
-        super.refresh()
-        
-        icon.image = iconImage.withRenderingMode(.alwaysTemplate)
-        icon.tintColor = foreColor
-        iconConstraintWidth?.constant = iconSize.width
-        iconConstraintHeight?.constant = iconSize.height
-        setNeedsLayout()
-        layoutIfNeeded()
-    }
-    
-    public override func setForeColor(color: UIColor) {
-        icon.tintColor = color
-    }
-    
-    public override func setForeAlpha(alpha: CGFloat) {
-        icon.alpha = alpha
+        switch state {
+        case .outside:
+            icon.alpha = 0
+        case .inside:
+            icon.alpha = 1
+        case let .outside_inside(progress):
+            icon.alpha = progress
+        default:
+            break
+        }
     }
 }
 
@@ -172,25 +160,18 @@ open class TextAction: ActionControl {
         return CGSize(width: label.intrinsicContentSize.width + 20, height: bounds.height)
     }
     
-    open override func removeFromSuperview() {
-        super.removeFromSuperview()
+    override func setState(_ state: ActionControl.State) {
+        super.setState(state)
         
-        label.alpha = 1
-    }
-    
-    open override func refresh() {
-        super.refresh()
-        
-        label.font = labelFont
-        label.text = labelText
-        label.textColor = foreColor
-    }
-    
-    public override func setForeColor(color: UIColor) {
-        label.tintColor = color
-    }
-    
-    public override func setForeAlpha(alpha: CGFloat) {
-        label.alpha = alpha
+        switch state {
+        case .outside:
+            label.alpha = 0
+        case .inside:
+            label.alpha = 1
+        case let .outside_inside(progress):
+            label.alpha = progress
+        default:
+            break
+        }
     }
 }

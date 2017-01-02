@@ -211,12 +211,15 @@ open class ActionCell: UIView, ActionSheetDelegate {
             backgroundColor = UIColor.clear
             setActionConstraintsForClose()
             
-            defaultAction?.refresh()
+            currentActionsheet?.actions.forEach({ (action) in
+                action.setState(.outside)
+            })
+            currentActionsheet = nil
+            
             defaultAction = nil
             contentScreenshot?.removeFromSuperview()
             contentScreenshot = nil
             
-            currentActionsheet = nil
             tapGestureRecognizer.isEnabled = false
         }
         completionHandler?()
@@ -381,7 +384,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         
         [actionsheetLeft, actionsheetRight].forEach { (actionsheet) in
             actionsheet.actions.forEach {
-                $0.setForeAlpha(alpha: 1)
+                $0.setState(.outside)
             }
         }
     }
@@ -390,10 +393,8 @@ open class ActionCell: UIView, ActionSheetDelegate {
     func setActionAttributesForClose() {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
-        [actionsheetLeft, actionsheetRight].forEach { (actionsheet) in
-            actionsheet.actions.forEach {
-                $0.setForeAlpha(alpha: 1)
-            }
+        currentActionsheet?.actions.forEach {
+            $0.setState(.outside)
         }
     }
 
@@ -402,7 +403,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         isLogEnabled ? { print("\(#function) -- " + "") }() : {}()
 
         currentActionsheet?.actions.forEach {
-            $0.setForeAlpha(alpha: 1)
+            $0.setState(.inside)
         }
     }
 
@@ -417,12 +418,10 @@ open class ActionCell: UIView, ActionSheetDelegate {
                 case .ladder_emergence:
                     let currentLadderIndex = ladderingIndex(side: side, position: position)
                     if index == currentLadderIndex {
-                        let currentForeAlpha = ((abs(position) - widthPre) / action.width).truncatingRemainder(dividingBy: 1)
-                        action.setForeAlpha(alpha: currentForeAlpha)
+                        let progress = ((abs(position) - widthPre) / action.width).truncatingRemainder(dividingBy: 1)
+                        action.setState(.outside_inside(progress: progress))
                     } else if index < currentLadderIndex {
-                        action.setForeAlpha(alpha: 1)
-                    } else {
-                        action.setForeAlpha(alpha: 0)
+                        action.setState(.inside)
                     }
                 default:
                     break
@@ -458,7 +457,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
             setDefaultActionConstraintsForPosition(position: self.positionForTriggerPrepare(side: side))
             currentActionsheet?.actions.forEach {
                 if $0 != self.defaultAction {
-                    $0.alpha = 0
+                    $0.setState(.inactive)
                 }
             }
             completionHandler?()
@@ -472,11 +471,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         if (currentActionsheet?.side) != nil {
             setActionConstraintsForOpen()
             currentActionsheet?.actions.forEach {
-                if $0 == self.defaultAction {
-                    $0.refresh()
-                } else {
-                    $0.alpha = 1
-                }
+                $0.setState(.inside)
             }
             completionHandler?()
         }
@@ -525,7 +520,7 @@ open class ActionCell: UIView, ActionSheetDelegate {
         if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
             UIView.animate(withDuration: animationDuration, animations: {
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
-                self.defaultAction?.refresh()
+                self.defaultAction?.setState(.inside)
             }, completion: { finished in
                 if finished {
                     completionHandler?()
@@ -854,7 +849,7 @@ extension ActionCell: UIGestureRecognizerDelegate {
     }
 }
 
-extension ActionCell: ActionControlActionDelegate {
+extension ActionCell: ActionControlDelegate {
     public func didActionTriggered(action: String) {
         isLogEnabled ? { print("\(#function) -- " + "action triggered: \(action)") }() : {}()
 
