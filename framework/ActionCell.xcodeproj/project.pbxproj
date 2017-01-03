@@ -14,7 +14,7 @@
 		420568031E1B420B001EB07B /* ActionCell.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568011E1B420B001EB07B /* ActionCell.plist */; };
 		420E4AB51E12907100FAD571 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420E4AB41E12907100FAD571 /* ActionCell.swift */; };
 		422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FB1D8F50B700307E3A /* ActionControl.swift */; };
-		4263EFF11D8D1901005006B8 /* ActionCell-Develop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4263EFE71D8D1901005006B8 /* ActionCell-Develop.framework */; };
+		4263EFF11D8D1901005006B8 /* ActionCell_Develop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */; };
 		4263EFF61D8D1901005006B8 /* ActionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4263EFF51D8D1901005006B8 /* ActionCellTests.swift */; };
 		4263EFF81D8D1901005006B8 /* ActionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4263EFEA1D8D1901005006B8 /* ActionCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -35,7 +35,7 @@
 		420568011E1B420B001EB07B /* ActionCell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ActionCell.plist; sourceTree = "<group>"; };
 		420E4AB41E12907100FAD571 /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		422E70FB1D8F50B700307E3A /* ActionControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionControl.swift; sourceTree = "<group>"; };
-		4263EFE71D8D1901005006B8 /* ActionCell-Develop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "ActionCell-Develop.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell_Develop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4263EFEA1D8D1901005006B8 /* ActionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionCell.h; sourceTree = "<group>"; };
 		4263EFF01D8D1901005006B8 /* ActionCellTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActionCellTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4263EFF51D8D1901005006B8 /* ActionCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCellTests.swift; sourceTree = "<group>"; };
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4263EFF11D8D1901005006B8 /* ActionCell-Develop.framework in Frameworks */,
+				4263EFF11D8D1901005006B8 /* ActionCell_Develop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +81,7 @@
 		4263EFE81D8D1901005006B8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4263EFE71D8D1901005006B8 /* ActionCell-Develop.framework */,
+				4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */,
 				4263EFF01D8D1901005006B8 /* ActionCellTests.xctest */,
 				420567FE1E1B4136001EB07B /* ActionCell.framework */,
 			);
@@ -164,9 +164,9 @@
 			productReference = 420567FE1E1B4136001EB07B /* ActionCell.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		4263EFE61D8D1901005006B8 /* ActionCell-Develop */ = {
+		4263EFE61D8D1901005006B8 /* ActionCell_Develop */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell-Develop" */;
+			buildConfigurationList = 4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell_Develop" */;
 			buildPhases = (
 				4263EFE21D8D1901005006B8 /* Sources */,
 				4263EFE31D8D1901005006B8 /* Frameworks */,
@@ -177,9 +177,9 @@
 			);
 			dependencies = (
 			);
-			name = "ActionCell-Develop";
+			name = ActionCell_Develop;
 			productName = ActionCell;
-			productReference = 4263EFE71D8D1901005006B8 /* ActionCell-Develop.framework */;
+			productReference = 4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		4263EFEF1D8D1901005006B8 /* ActionCellTests */ = {
@@ -233,7 +233,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4263EFE61D8D1901005006B8 /* ActionCell-Develop */,
+				4263EFE61D8D1901005006B8 /* ActionCell_Develop */,
 				420567F31E1B4136001EB07B /* ActionCell */,
 				4263EFEF1D8D1901005006B8 /* ActionCellTests */,
 			);
@@ -298,7 +298,7 @@
 /* Begin PBXTargetDependency section */
 		4263EFF31D8D1901005006B8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4263EFE61D8D1901005006B8 /* ActionCell-Develop */;
+			target = 4263EFE61D8D1901005006B8 /* ActionCell_Develop */;
 			targetProxy = 4263EFF21D8D1901005006B8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -536,7 +536,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell-Develop" */ = {
+		4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell_Develop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4263EFFC1D8D1901005006B8 /* Debug */,

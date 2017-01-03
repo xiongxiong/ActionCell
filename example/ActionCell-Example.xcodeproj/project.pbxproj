@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		42028B5F1E132C0400582E2A /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; };
+		420568091E1B584E001EB07B /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		422E710B1D8F56B900307E3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710A1D8F56B900307E3A /* AppDelegate.swift */; };
 		422E710D1D8F56B900307E3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710C1D8F56B900307E3A /* ViewController.swift */; };
 		422E71101D8F56B900307E3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
@@ -15,16 +15,22 @@
 		422E71151D8F56BA00307E3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		422E71201D8F56BA00307E3A /* ActionCell_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E711F1D8F56BA00307E3A /* ActionCell_ExampleTests.swift */; };
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
-		42CA4FDB1E19D1C20063CDB8 /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		42028B5C1E1327E300582E2A /* PBXContainerItemProxy */ = {
+		420568051E1B4D0B001EB07B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 420567FE1E1B4136001EB07B;
+			remoteInfo = ActionCell;
+		};
+		420568071E1B5849001EB07B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 4263EFE61D8D1901005006B8;
-			remoteInfo = ActionCell;
+			remoteInfo = ActionCell_Develop;
 		};
 		422E711C1D8F56BA00307E3A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -63,7 +69,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				42CA4FDB1E19D1C20063CDB8 /* ActionCell.framework in Embed Frameworks */,
+				420568091E1B584E001EB07B /* ActionCell.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,7 +91,6 @@
 		422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCell_ExampleUITests.swift; sourceTree = "<group>"; };
 		422E712C1D8F56BA00307E3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ActionCell.xcodeproj; path = ../Framework/ActionCell.xcodeproj; sourceTree = "<group>"; };
-		428DC5F11DEFD4C500E19D08 /* ActionCell-Example copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ActionCell-Example copy-Info.plist"; path = "/Users/wonderbear/Creation/ActionCell/Example/ActionCell-Example copy-Info.plist"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +98,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42028B5F1E132C0400582E2A /* ActionCell.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,7 +127,6 @@
 				422E71291D8F56BA00307E3A /* ActionCell-ExampleUITests */,
 				422E71081D8F56B900307E3A /* Products */,
 				425D68CA1DBC6699006873EB /* Frameworks */,
-				428DC5F11DEFD4C500E19D08 /* ActionCell-Example copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */,
+				420568061E1B4D0B001EB07B /* ActionCell.framework */,
 				428DC5DC1DEFD18F00E19D08 /* ActionCellTests.xctest */,
 			);
 			name = Products;
@@ -199,7 +203,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				42028B5D1E1327E300582E2A /* PBXTargetDependency */,
+				420568081E1B5849001EB07B /* PBXTargetDependency */,
 			);
 			name = "ActionCell-Example";
 			productName = "ActionCell-Example";
@@ -296,6 +300,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		420568061E1B4D0B001EB07B /* ActionCell.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ActionCell.framework;
+			remoteRef = 420568051E1B4D0B001EB07B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -368,10 +379,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		42028B5D1E1327E300582E2A /* PBXTargetDependency */ = {
+		420568081E1B5849001EB07B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = ActionCell;
-			targetProxy = 42028B5C1E1327E300582E2A /* PBXContainerItemProxy */;
+			name = ActionCell_Develop;
+			targetProxy = 420568071E1B5849001EB07B /* PBXContainerItemProxy */;
 		};
 		422E711D1D8F56BA00307E3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

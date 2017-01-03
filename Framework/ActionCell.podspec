@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ActionCell'
-  s.version          = '1.2.0'
-  s.summary          = 'ActionCell, has many functions.'
+  s.version          = '2.0.0'
+  s.summary          = 'ActionCell, wrap UITableViewCell with actions.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-ActionCell, has many functions. I love it.
+ActionCell, wraps UITableViewCell with actions elegantly, no need to inherit UITableViewCell. I love it.
                        DESC
 
   s.homepage         = 'https://github.com/xiongxiong/ActionCell'
@@ -30,7 +30,7 @@ ActionCell, has many functions. I love it.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Framework/ActionCell/**/*'
+  s.source_files = 'Framework/ActionCell/**/*.{h,swift}'
 
   # s.resource_bundles = {
   #   'ActionCell' => ['ActionCell/Assets/*.png']
