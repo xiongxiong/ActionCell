@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-ActionCell, wraps UITableViewCell with actions elegantly, no need to inherit UITableViewCell. I love it.
+ActionCell, wraps UITableViewCell with actions elegantly, no need to inherit UITableViewCell, use swiping to trigger actions (known from the Mailbox App). I love it.
                        DESC
 
   s.homepage         = 'https://github.com/xiongxiong/ActionCell'
