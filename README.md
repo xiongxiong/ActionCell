@@ -124,7 +124,7 @@ public protocol ActionSheetDelegate: NSObjectProtocol {
 
 ## Usage
 
-1. Implement ActionCellDelegate
+* Implement ActionCellDelegate
 
 ```swift
 extension ViewController: ActionCellDelegate {
@@ -135,7 +135,7 @@ extension ViewController: ActionCellDelegate {
 }
 ```
 
-2. Wrap your UITableViewCell with ActionCell
+* Wrap your UITableViewCell with ActionCell
 
 ```swift
 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -212,41 +212,39 @@ IconAction, TextAction & IconTextAction are already implemented, you can use it 
 
 ## Properties & Methods
 
-* ActionCell
-wrap(cell target: UITableViewCell, actionsLeft: [ActionControl] = [], actionsRight: [ActionControl] = [])
-* IconAction
+### ActionCell
+```swift
+var animationStyle: AnimationStyle = ladder | ladder_emergence | concurrent // Action animation style
+var animationDuration: TimeInterval = 0.3 // duration of the animation
+var enableDefaultAction: Bool // Enable default action to be triggered when the content is panned to far enough, if true, the first action (on left: the leftest one, on right: the rightest one) will be the default action.
+var defaultActionTriggerPropotion: CGFloat // The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
+
+func wrap(cell target: UITableViewCell, actionsLeft: [ActionControl] = [], actionsRight: [ActionControl] = [])
+```
+
+### IconAction
+```swift
 init(action: String, width: CGFloat = 80, iconSize: CGSize = CGSize(width: 20, height: 20))
-* TextAction
+```
+
+### TextAction
+```swift
 init(action: String, width: CGFloat = 80)
-* IconTextAction
+```
+
+### IconTextAction
+```swift
 init(action: String, width: CGFloat = 80, iconSize: CGSize = CGSize(width: 20, height: 20), space: CGFloat = 5, offset: CGFloat = -3)
-* UITableViewCell
+```
+
+### UITableViewCell
+```swift
 var isActionSheetOpened: Bool
-setupActionsheet(side: ActionSide, actions: [ActionControl] = []) // Change actionsheet's actions
-openActionsheet(side: ActionSide, completionHandler: (() -> ())? = nil)
-closeActionsheet(_ completionHandler: (() -> ())? = nil)
 
-### Style
-- animationStyle: AnimationStyle = ladder | ladder_emergence | concurrent // Action animation style
-- enableDefaultAction: Bool // Enable default action to be triggered when the content is panned to far enough
-- defaultActionTriggerPropotion: CGFloat // The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
-- defaultActionIconColor: UIColor? // Default action's icon color
-- defaultActionBackImage: UIImage? // Default action's back image
-- defaultActionBackColor: UIColor? // Default action's back color
-
-### Behavior
-
-- enableDefaultAction: Bool // Enable default action to be triggered when the content is panned to far enough
-- defaultActionIndexLeft: Int // Index of default action - Left
-- defaultActionIndexRight: Int // Index of default action - Right
-
-### Animation
-
-- animationDuration: NSTimeInterval // Spring animation - duration of the animation
-- animationDelay: TimeInterval // Spring animation - delay of the animation
-- springDamping: CGFloat // Spring animation - spring damping of the animation
-- initialSpringVelocity: CGFloat // Spring animation - initial spring velocity of the animation
-- animationOptions: UIViewAnimationOptions // Spring animation - options of the animation
+func setupActionsheet(side: ActionSide, actions: [ActionControl] = []) // Change actionsheet's actions
+func openActionsheet(side: ActionSide, completionHandler: (() -> ())? = nil)
+func closeActionsheet(_ completionHandler: (() -> ())? = nil)
+```
 
 ## Author
 
