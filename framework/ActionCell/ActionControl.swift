@@ -53,16 +53,10 @@ open class ActionControl: UIControl {
         #endif
         
         switch state {
-        case .outside:
-            alpha = 1
-        case .inside:
-            alpha = 1
-        case .active:
-            alpha = 1
         case .inactive:
-            alpha = 0
+            isHidden = true
         default:
-            break
+            isHidden = false
         }
     }
 }
