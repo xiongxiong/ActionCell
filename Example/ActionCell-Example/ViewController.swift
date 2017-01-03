@@ -53,14 +53,58 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             wrapper.animationStyle = .ladder
             wrapper.wrap(cell: cell, 
                          actionsLeft: [
-                            TextAction(action: "cell 1 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)),
-                            TextAction(action: "cell 1 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
-                            TextAction(action: "cell 1 -- left 2", labelText: "World", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            ], 
+                            {
+                                let action = IconTextAction(action: "cell 0 -- left 0")
+                                action.icon.image = #imageLiteral(resourceName: "image_5").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.label.text = "Hello"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = TextAction(action: "cell 0 -- left 1")
+                                action.label.text = "Long Sentence"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = IconAction(action: "cell 0 -- left 2")
+                                action.icon.image = #imageLiteral(resourceName: "image_0").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                return action
+                            }(),
+                            ],
                          actionsRight: [
-                            TextAction(action: "cell 1 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
-                            TextAction(action: "cell 1 -- right 1", labelText: "Long Sentence", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            TextAction(action: "cell 1 -- right 2", labelText: "World", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
+                            {
+                                let action = IconTextAction(action: "cell 0 -- right 0")
+                                action.icon.image = #imageLiteral(resourceName: "image_1").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.label.text = "Hello"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = TextAction(action: "cell 0 -- right 1")
+                                action.label.text = "Long Sentence"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = IconAction(action: "cell 0 -- right 2")
+                                action.icon.image = #imageLiteral(resourceName: "image_2").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                return action
+                            }(),
                             ])
             return cell
         case 1:
@@ -71,14 +115,58 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             wrapper.animationStyle = .ladder_emergence
             wrapper.wrap(cell: cell,
                          actionsLeft: [
-                            TextAction(action: "cell 2 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- left 2", labelText: "World", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            {
+                                let action = IconTextAction(action: "cell 1 -- left 0")
+                                action.icon.image = #imageLiteral(resourceName: "image_5").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.label.text = "Hello"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = TextAction(action: "cell 1 -- left 1")
+                                action.label.text = "Long Sentence"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = IconAction(action: "cell 1 -- left 2")
+                                action.icon.image = #imageLiteral(resourceName: "image_0").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                return action
+                            }(),
                             ],
                          actionsRight: [
-                            TextAction(action: "cell 2 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- right 1", labelText: "Long Sentence", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            TextAction(action: "cell 2 -- right 2", labelText: "World", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
+                            {
+                                let action = IconTextAction(action: "cell 1 -- right 0")
+                                action.icon.image = #imageLiteral(resourceName: "image_1").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.label.text = "Hello"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = TextAction(action: "cell 1 -- right 1")
+                                action.label.text = "Long Sentence"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = IconAction(action: "cell 1 -- right 2")
+                                action.icon.image = #imageLiteral(resourceName: "image_2").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                return action
+                            }(),
                             ])
             return cell
         case 2:
@@ -89,14 +177,58 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             wrapper.animationStyle = .concurrent
             wrapper.wrap(cell: cell,
                          actionsLeft: [
-                            TextAction(action: "cell 3 -- left 0", labelText: "Hello", backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- left 1", labelText: "Long Sentence", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- left 2", labelText: "World", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
+                            {
+                                let action = IconTextAction(action: "cell 2 -- left 0")
+                                action.icon.image = #imageLiteral(resourceName: "image_5").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.label.text = "Hello"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = TextAction(action: "cell 2 -- left 1")
+                                action.label.text = "Long Sentence"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = IconAction(action: "cell 2 -- left 2")
+                                action.icon.image = #imageLiteral(resourceName: "image_0").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                return action
+                            }(),
                             ],
                          actionsRight: [
-                            TextAction(action: "cell 3 -- right 0", labelText: "Hello", backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- right 1", labelText: "Long Sentence", backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) ,
-                            TextAction(action: "cell 3 -- right 2", labelText: "World", backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)) ,
+                            {
+                                let action = IconTextAction(action: "cell 2 -- right 0")
+                                action.icon.image = #imageLiteral(resourceName: "image_1").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.label.text = "Hello"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = TextAction(action: "cell 2 -- right 1")
+                                action.label.text = "Long Sentence"
+                                action.label.font = UIFont.systemFont(ofSize: 12)
+                                action.label.textColor = UIColor.white
+                                action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                return action
+                            }(),
+                            {
+                                let action = IconAction(action: "cell 2 -- right 2")
+                                action.icon.image = #imageLiteral(resourceName: "image_2").withRenderingMode(.alwaysTemplate)
+                                action.icon.tintColor = UIColor.white
+                                action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                return action
+                            }(),
                             ])
             return cell
         default:
