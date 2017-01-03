@@ -12,6 +12,8 @@
 		420567F91E1B4136001EB07B /* ActionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4263EFEA1D8D1901005006B8 /* ActionCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		420568021E1B420B001EB07B /* ActionCell-Develop.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568001E1B420B001EB07B /* ActionCell-Develop.plist */; };
 		420568031E1B420B001EB07B /* ActionCell.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568011E1B420B001EB07B /* ActionCell.plist */; };
+		4205680C1E1B7873001EB07B /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */; };
+		4205680D1E1B7885001EB07B /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */; };
 		420E4AB51E12907100FAD571 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420E4AB41E12907100FAD571 /* ActionCell.swift */; };
 		422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FB1D8F50B700307E3A /* ActionControl.swift */; };
 		4263EFF11D8D1901005006B8 /* ActionCell_Develop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */; };
@@ -33,6 +35,7 @@
 		420567FE1E1B4136001EB07B /* ActionCell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		420568001E1B420B001EB07B /* ActionCell-Develop.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ActionCell-Develop.plist"; sourceTree = "<group>"; };
 		420568011E1B420B001EB07B /* ActionCell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ActionCell.plist; sourceTree = "<group>"; };
+		4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
 		420E4AB41E12907100FAD571 /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		422E70FB1D8F50B700307E3A /* ActionControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionControl.swift; sourceTree = "<group>"; };
 		4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell_Develop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				420E4AB41E12907100FAD571 /* ActionCell.swift */,
+				4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */,
 				422E70FB1D8F50B700307E3A /* ActionControl.swift */,
 				4263F0011D8D1BC2005006B8 /* Support Files */,
 			);
@@ -272,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				420567F51E1B4136001EB07B /* ActionCell.swift in Sources */,
+				4205680C1E1B7873001EB07B /* UITableViewCell+Extension.swift in Sources */,
 				420567F61E1B4136001EB07B /* ActionControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4205680D1E1B7885001EB07B /* UITableViewCell+Extension.swift in Sources */,
 				420E4AB51E12907100FAD571 /* ActionCell.swift in Sources */,
 				422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */,
 			);

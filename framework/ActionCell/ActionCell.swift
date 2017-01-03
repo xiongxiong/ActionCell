@@ -28,48 +28,6 @@ extension ActionCellDelegate {
     }
 }
 
-public protocol ActionSheetDelegate: NSObjectProtocol {
-    /// Is action sheet opened
-    var isActionSheetOpened: Bool { get }
-    /// Setup action sheet
-    func setupActionsheet(side: ActionSide, actions: [ActionControl])
-    /// Open action sheet
-    func openActionsheet(side: ActionSide, completionHandler: (() -> ())?)
-    /// Close action sheet
-    func closeActionsheet(_ completionHandler: (() -> ())?)
-}
-
-extension UITableViewCell: ActionSheetDelegate {
-    
-    /// UITableViewCell's ActionCell wrapper
-    var actionCell: ActionCell? {
-        var actionCell: ActionCell? = nil
-        subviews.forEach({ (view) in
-            if let wrapper = view as? ActionCell {
-                actionCell = wrapper
-            }
-        })
-        return actionCell
-    }
-    
-    // MARK: ActionSheetDelegate
-    public var isActionSheetOpened: Bool {
-        return actionCell?.isActionSheetOpened ?? false
-    }
-    
-    public func setupActionsheet(side: ActionSide, actions: [ActionControl] = []) {
-        actionCell?.setupActionSheet(side: side, actions: actions)
-    }
-    
-    public func openActionsheet(side: ActionSide, completionHandler: (() -> ())? = nil) {
-        actionCell?.openActionsheet(side: side, completionHandler: completionHandler)
-    }
-    
-    public func closeActionsheet(_ completionHandler: (() -> ())? = nil) {
-        actionCell?.closeActionsheet(completionHandler)
-    }
-}
-
 open class ActionCell: UIView {
     
     // MARK: ActionCell - 动作设置
@@ -162,14 +120,11 @@ open class ActionCell: UIView {
         panGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
-        addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.numberOfTapsRequired = 1
-        tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         tapGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         tapGestureRecognizer.require(toFail: panGestureRecognizer)
-        tapGestureRecognizer.isEnabled = false
         
         setupActionSheet(side: .left, actions: actionsLeft)
         setupActionSheet(side: .right, actions: actionsRight)
@@ -184,12 +139,13 @@ open class ActionCell: UIView {
         
         if isActionsheetValid(side: side) {
             contentScreenshot = takeScreenshot()
+            contentScreenshot?.isUserInteractionEnabled = true
+            contentScreenshot?.addGestureRecognizer(tapGestureRecognizer)
             addSubview(contentScreenshot!)
             
             currentActionsheet = actionsheet(side: side)
             defaultAction = defaultAction(side: side)
             backgroundColor = defaultAction?.backgroundColor
-            tapGestureRecognizer.isEnabled = true
         }
     }
     
@@ -207,8 +163,8 @@ open class ActionCell: UIView {
         isDefaultActionTriggered = false
         defaultAction = nil
         contentScreenshot?.removeFromSuperview()
+        contentScreenshot?.removeGestureRecognizer(tapGestureRecognizer)
         contentScreenshot = nil
-        tapGestureRecognizer.isEnabled = false
         
         completionHandler?()
     }
@@ -928,19 +884,7 @@ extension ActionCell: UIGestureRecognizerDelegate {
             print("\(#function) -- " + "")
         #endif
         
-        let location = gestureRecognizer.location(in: self)
-        if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            switch side {
-            case .left:
-                if location.x >= contentScreenshot.frame.origin.x {
-                    animateOpenToClose()
-                }
-            case .right:
-                if location.x <= bounds.width + contentScreenshot.frame.origin.x {
-                    animateOpenToClose()
-                }
-            }
-        }
+        animateOpenToClose()
     }
     
     /// Enable or disable gesture recognizers
