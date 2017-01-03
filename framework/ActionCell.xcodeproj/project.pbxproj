@@ -7,9 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		422E70FC1D8F50B700307E3A /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FA1D8F50B700307E3A /* ActionCell.swift */; };
+		420567F51E1B4136001EB07B /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420E4AB41E12907100FAD571 /* ActionCell.swift */; };
+		420567F61E1B4136001EB07B /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FB1D8F50B700307E3A /* ActionControl.swift */; };
+		420567F91E1B4136001EB07B /* ActionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4263EFEA1D8D1901005006B8 /* ActionCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		420568021E1B420B001EB07B /* ActionCell-Develop.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568001E1B420B001EB07B /* ActionCell-Develop.plist */; };
+		420568031E1B420B001EB07B /* ActionCell.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568011E1B420B001EB07B /* ActionCell.plist */; };
+		4205680C1E1B7873001EB07B /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */; };
+		4205680D1E1B7885001EB07B /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */; };
+		420E4AB51E12907100FAD571 /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420E4AB41E12907100FAD571 /* ActionCell.swift */; };
 		422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FB1D8F50B700307E3A /* ActionControl.swift */; };
-		4263EFF11D8D1901005006B8 /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4263EFE71D8D1901005006B8 /* ActionCell.framework */; };
+		4263EFF11D8D1901005006B8 /* ActionCell_Develop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */; };
 		4263EFF61D8D1901005006B8 /* ActionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4263EFF51D8D1901005006B8 /* ActionCellTests.swift */; };
 		4263EFF81D8D1901005006B8 /* ActionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4263EFEA1D8D1901005006B8 /* ActionCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -25,18 +32,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		422E70FA1D8F50B700307E3A /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
+		420567FE1E1B4136001EB07B /* ActionCell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		420568001E1B420B001EB07B /* ActionCell-Develop.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ActionCell-Develop.plist"; sourceTree = "<group>"; };
+		420568011E1B420B001EB07B /* ActionCell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ActionCell.plist; sourceTree = "<group>"; };
+		4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
+		420E4AB41E12907100FAD571 /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
 		422E70FB1D8F50B700307E3A /* ActionControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionControl.swift; sourceTree = "<group>"; };
-		4263EFE71D8D1901005006B8 /* ActionCell.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ActionCell_Develop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4263EFEA1D8D1901005006B8 /* ActionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionCell.h; sourceTree = "<group>"; };
-		4263EFEB1D8D1901005006B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4263EFF01D8D1901005006B8 /* ActionCellTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActionCellTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4263EFF51D8D1901005006B8 /* ActionCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCellTests.swift; sourceTree = "<group>"; };
 		4263EFF71D8D1901005006B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		42A231071DE8253F00351DA5 /* ActionCell.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActionCell.framework; path = Carthage/Build/iOS/ActionCell.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		420567F71E1B4136001EB07B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4263EFE31D8D1901005006B8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -48,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4263EFF11D8D1901005006B8 /* ActionCell.framework in Frameworks */,
+				4263EFF11D8D1901005006B8 /* ActionCell_Develop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,8 +84,9 @@
 		4263EFE81D8D1901005006B8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4263EFE71D8D1901005006B8 /* ActionCell.framework */,
+				4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */,
 				4263EFF01D8D1901005006B8 /* ActionCellTests.xctest */,
+				420567FE1E1B4136001EB07B /* ActionCell.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -77,7 +94,8 @@
 		4263EFE91D8D1901005006B8 /* ActionCell */ = {
 			isa = PBXGroup;
 			children = (
-				422E70FA1D8F50B700307E3A /* ActionCell.swift */,
+				420E4AB41E12907100FAD571 /* ActionCell.swift */,
+				4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */,
 				422E70FB1D8F50B700307E3A /* ActionControl.swift */,
 				4263F0011D8D1BC2005006B8 /* Support Files */,
 			);
@@ -96,8 +114,9 @@
 		4263F0011D8D1BC2005006B8 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
+				420568001E1B420B001EB07B /* ActionCell-Develop.plist */,
+				420568011E1B420B001EB07B /* ActionCell.plist */,
 				4263EFEA1D8D1901005006B8 /* ActionCell.h */,
-				4263EFEB1D8D1901005006B8 /* Info.plist */,
 			);
 			name = "Support Files";
 			sourceTree = "<group>";
@@ -105,7 +124,6 @@
 		42A231061DE8253F00351DA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				42A231071DE8253F00351DA5 /* ActionCell.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -113,6 +131,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		420567F81E1B4136001EB07B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				420567F91E1B4136001EB07B /* ActionCell.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4263EFE41D8D1901005006B8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,9 +150,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		4263EFE61D8D1901005006B8 /* ActionCell */ = {
+		420567F31E1B4136001EB07B /* ActionCell */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell" */;
+			buildConfigurationList = 420567FB1E1B4136001EB07B /* Build configuration list for PBXNativeTarget "ActionCell" */;
+			buildPhases = (
+				420567F41E1B4136001EB07B /* Sources */,
+				420567F71E1B4136001EB07B /* Frameworks */,
+				420567F81E1B4136001EB07B /* Headers */,
+				420567FA1E1B4136001EB07B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ActionCell;
+			productName = ActionCell;
+			productReference = 420567FE1E1B4136001EB07B /* ActionCell.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		4263EFE61D8D1901005006B8 /* ActionCell_Develop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell_Develop" */;
 			buildPhases = (
 				4263EFE21D8D1901005006B8 /* Sources */,
 				4263EFE31D8D1901005006B8 /* Frameworks */,
@@ -137,9 +181,9 @@
 			);
 			dependencies = (
 			);
-			name = ActionCell;
+			name = ActionCell_Develop;
 			productName = ActionCell;
-			productReference = 4263EFE71D8D1901005006B8 /* ActionCell.framework */;
+			productReference = 4263EFE71D8D1901005006B8 /* ActionCell_Develop.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		4263EFEF1D8D1901005006B8 /* ActionCellTests */ = {
@@ -167,7 +211,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = snowflyer;
 				TargetAttributes = {
 					4263EFE61D8D1901005006B8 = {
@@ -193,13 +237,23 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4263EFE61D8D1901005006B8 /* ActionCell */,
+				4263EFE61D8D1901005006B8 /* ActionCell_Develop */,
+				420567F31E1B4136001EB07B /* ActionCell */,
 				4263EFEF1D8D1901005006B8 /* ActionCellTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		420567FA1E1B4136001EB07B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				420568031E1B420B001EB07B /* ActionCell.plist in Resources */,
+				420568021E1B420B001EB07B /* ActionCell-Develop.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4263EFE51D8D1901005006B8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -217,11 +271,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		420567F41E1B4136001EB07B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				420567F51E1B4136001EB07B /* ActionCell.swift in Sources */,
+				4205680C1E1B7873001EB07B /* UITableViewCell+Extension.swift in Sources */,
+				420567F61E1B4136001EB07B /* ActionControl.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4263EFE21D8D1901005006B8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				422E70FC1D8F50B700307E3A /* ActionCell.swift in Sources */,
+				4205680D1E1B7885001EB07B /* UITableViewCell+Extension.swift in Sources */,
+				420E4AB51E12907100FAD571 /* ActionCell.swift in Sources */,
 				422E70FD1D8F50B700307E3A /* ActionControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,12 +304,55 @@
 /* Begin PBXTargetDependency section */
 		4263EFF31D8D1901005006B8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4263EFE61D8D1901005006B8 /* ActionCell */;
+			target = 4263EFE61D8D1901005006B8 /* ActionCell_Develop */;
 			targetProxy = 4263EFF21D8D1901005006B8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		420567FC1E1B4136001EB07B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/ActionCell/ActionCell.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.snowflyer.ActionCell;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		420567FD1E1B4136001EB07B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/ActionCell/ActionCell.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.snowflyer.ActionCell;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		4263EFF91D8D1901005006B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -263,6 +371,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -316,6 +425,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -353,13 +463,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = ActionCell/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/ActionCell/ActionCell-Develop.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "\"-D\" \"DEVELOPMENT\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.snowflyer.ActionCell;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -377,13 +485,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = ActionCell/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/ActionCell/ActionCell-Develop.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "\"-D\" \"DEVELOPMENT\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.snowflyer.ActionCell;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -418,6 +524,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		420567FB1E1B4136001EB07B /* Build configuration list for PBXNativeTarget "ActionCell" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				420567FC1E1B4136001EB07B /* Debug */,
+				420567FD1E1B4136001EB07B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4263EFE11D8D1901005006B8 /* Build configuration list for PBXProject "ActionCell" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -427,7 +542,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell" */ = {
+		4263EFFB1D8D1901005006B8 /* Build configuration list for PBXNativeTarget "ActionCell_Develop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4263EFFC1D8D1901005006B8 /* Debug */,

@@ -8,8 +8,13 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ActionCell'
+<<<<<<< HEAD
+  s.version          = '1.2.1'
+  s.summary          = 'ActionCell, has many functions.'
+=======
   s.version          = '2.0.0'
   s.summary          = 'ActionCell, wrap UITableViewCell with actions.'
+>>>>>>> develop
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?

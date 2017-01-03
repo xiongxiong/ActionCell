@@ -3,34 +3,39 @@
 [![CI Status](http://img.shields.io/travis/wonderbear/ActionCell.svg?style=flat)](https://travis-ci.org/wonderbear/ActionCell) [![Version](https://img.shields.io/cocoapods/v/ActionCell.svg?style=flat)](http://cocoapods.org/pods/ActionCell) [![Platform](https://img.shields.io/cocoapods/p/ActionCell.svg?style=flat)](http://cocoapods.org/pods/ActionCell)
 [![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://developer.apple.com/swift/) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![License](https://img.shields.io/cocoapods/l/ActionCell.svg?style=flat)](http://cocoapods.org/pods/ActionCell)
 
-Easy to use UITableViewCell implementing swiping to trigger actions (known from the Mailbox App)
+ActionCell, wraps UITableViewCell with actions elegantly, no need to inherit UITableViewCell, use swiping to trigger actions (known from the Mailbox App). I love it.
 
 ![ActionCell](ScreenShot/ActionCell.gif "ActionCell")
 
 ## Contents
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Example](#example)
-- [Installation](#installation)
-- [Protocols](#protocols)
-- [Usage](#usage)
-- [Properties](#properties)
-- [Author](#author)
-- [License](#license)
+- [Features](#Features)
+- [Requirements](#Requirements)
+- [Attention](#Attention)
+- [Example](#Example)
+- [Installation](#Installation)
+- [Protocols](#Protocols)
+- [Usage](#Usage)
+- [Properties & Methods](#Properties & Methods)
+- [Author](#Author)
+- [License](#License)
 
 ## Features
 
-- [x] Flexible action support
+- [x] Flexible, No need to inherit UITableViewCell
+- [x] Easy to use
+- [x] Customizable action control
 - [x] Support default action
-- [x] Customized action width
-- [x] Customized action control
 
 ## Requirements
 
 - iOS 8.0+ / Mac OS X 10.11+ / tvOS 9.0+
 - Xcode 8.0+
 - Swift 3.0+
+
+## Attention
+
+From version 2.0, the ActionCell framework is redesigned, so API is different from version 2.* to 1.*, if you used old version before, you must do some change, but not much.
 
 ## Installation
 
@@ -50,7 +55,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'ActionCell', '~> 1.0.0'
+    pod 'ActionCell', '~> 2.0.0'
 end
 ```
 
@@ -74,7 +79,7 @@ $ brew install carthage
 To integrate ActionCell into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "xiongxiong/ActionCell" ~> 1.0.0
+github "xiongxiong/ActionCell" ~> 2.0.0
 ```
 
 Run `carthage update` to build the framework and drag the built `ActionCell.framework` into your Xcode project.
@@ -89,105 +94,157 @@ Open the example project, build and run.
 
 ## Protocols
 
-### CellActionProtocol
+### ActionCellDelegate
 
 ```swift
-public protocol CellActionProtocol {
-    func setForeColor(color: UIColor)
-    func setForeAlpha(alpha: CGFloat)
+public protocol ActionCellDelegate: NSObjectProtocol {
+
+    var tableView: UITableView! { get }
+    /// Do something when action is triggered
+    func didActionTriggered(cell: UITableViewCell, action: String)
+}
+```
+
+```swift
+public protocol ActionControlDelegate: NSObjectProtocol {
+    func didActionTriggered(action: String)
+}
+```
+
+```swift
+public protocol ActionSheetDelegate: NSObjectProtocol {
+    /// Setup action sheet
+    func setupActionsheet(side: ActionSide, actions: [ActionControl])
+    /// Open action sheet
+    func openActionsheet(side: ActionSide, completionHandler: (() -> ())?)
+    /// Close action sheet
+    func closeActionsheet(_ completionHandler: (() -> ())?)
 }
 ```
 
 ## Usage
 
-### Inherit ActionControl & implement CellActionProtocol
+* Implement ActionCellDelegate
 
 ```swift
-public class ActionControl: UIControl {}
+extension ViewController: ActionCellDelegate {
+
+    public func didActionTriggered(cell: UITableViewCell, action: String) {
+        ...
+    }
+}
 ```
 
-```swift
-public class TextAction: ActionControl, CellActionProtocol {
-    var label: UILabel = UILabel()
-    ...
-
-    public func setForeColor(color: UIColor) {
-        label.tintColor = color
-    }
-
-    public func setForeAlpha(alpha: CGFloat) {
-        label.alpha = alpha
-    }
-  }
-```
-
-IconAction & TextAction are already implemented, you can use it straightforwardly without implementing CellActionProtocol, or you can choose to implement CellActionProtocol to use your own ActionControl.
-
-### Initialize ActionCell
+* Wrap your UITableViewCell with ActionCell
 
 ```swift
 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch (indexPath as NSIndexPath).row {
-        case 0:
-            let cell = ActionCell<IconAction>() // create ActionCell
-            cell.textLabel?.text = "Colorful actions"
-            cell.defaultActionIndexLeft = 1 // set default action index to be triggered, default is the first one.
-            cell.actionsLeft = [
-                IconAction(iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.95, green:0.33, blue:0.58, alpha:1.00)) {
-                    self.output.text = ("cell 0 -- left 0 clicked")
-                },
-                IconAction(iconImage: UIImage(named: "1")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00), width: 140) {
-                    self.output.text = ("cell 0 -- left 1 clicked")
-                },
-                IconAction(iconImage: UIImage(named: "2")!, backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
-                    self.output.text = ("cell 0 -- left 2 clicked")
-                },
-            ] // set actions of the action cell
-            cell.defaultActionIndexRight = 2 // set default action index to be triggered, default is the first one.
-            cell.actionsRight = [
-                IconAction(iconImage: UIImage(named: "0")!, backColor: UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)) {
-                    self.output.text = ("cell 0 -- left 0 clicked")
-                },
-                IconAction(iconImage: UIImage(named: "1")!, backColor: UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)) {
-                    self.output.text = ("cell 0 -- left 1 clicked")
-                },
-                IconAction(iconImage: UIImage(named: "2")!, backColor: UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00), width: 140) {
-                    self.output.text = ("cell 0 -- left 2 clicked")
-                },
-            ] // set actions of the action cell
-            return cell
-        default:
-          break
-        }
+  let cell = tableView.dequeueReusableCell(withIdentifier: "reuseId")!
+              ... (cell customization)
+              // create wrapper
+              let wrapper = ActionCell()
+              // set delegate
+              wrapper.delegate = self
+              // set animationStyle
+              wrapper.animationStyle = .ladder
+              // wrap cell with actions
+              wrapper.wrap(cell: cell,
+                           actionsLeft: [
+                              {
+                                  let action = IconTextAction(action: "cell 0 -- left 0")
+                                  action.icon.image = #imageLiteral(resourceName: "image_5").withRenderingMode(.alwaysTemplate)
+                                  action.icon.tintColor = UIColor.white
+                                  action.label.text = "Hello"
+                                  action.label.font = UIFont.systemFont(ofSize: 12)
+                                  action.label.textColor = UIColor.white
+                                  action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                  return action
+                              }(),
+                              {
+                                  let action = TextAction(action: "cell 0 -- left 1")
+                                  action.label.text = "Long Sentence"
+                                  action.label.font = UIFont.systemFont(ofSize: 12)
+                                  action.label.textColor = UIColor.white
+                                  action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                  return action
+                              }(),
+                              {
+                                  let action = IconAction(action: "cell 0 -- left 2")
+                                  action.icon.image = #imageLiteral(resourceName: "image_0").withRenderingMode(.alwaysTemplate)
+                                  action.icon.tintColor = UIColor.white
+                                  action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                  return action
+                              }(),
+                              ],
+                           actionsRight: [
+                              {
+                                  let action = IconTextAction(action: "cell 0 -- right 0")
+                                  action.icon.image = #imageLiteral(resourceName: "image_1").withRenderingMode(.alwaysTemplate)
+                                  action.icon.tintColor = UIColor.white
+                                  action.label.text = "Hello"
+                                  action.label.font = UIFont.systemFont(ofSize: 12)
+                                  action.label.textColor = UIColor.white
+                                  action.backgroundColor = UIColor(red:0.14, green:0.69, blue:0.67, alpha:1.00)
+                                  return action
+                              }(),
+                              {
+                                  let action = TextAction(action: "cell 0 -- right 1")
+                                  action.label.text = "Long Sentence"
+                                  action.label.font = UIFont.systemFont(ofSize: 12)
+                                  action.label.textColor = UIColor.white
+                                  action.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.73, alpha:1.00)
+                                  return action
+                              }(),
+                              {
+                                  let action = IconAction(action: "cell 0 -- right 2")
+                                  action.icon.image = #imageLiteral(resourceName: "image_2").withRenderingMode(.alwaysTemplate)
+                                  action.icon.tintColor = UIColor.white
+                                  action.backgroundColor = UIColor(red:1.00, green:0.78, blue:0.80, alpha:1.00)
+                                  return action
+                              }(),
+                              ])
+              return cell
+}
 ```
 
-## Properties
+### Inherit ActionControl [Optional]
+IconAction, TextAction & IconTextAction are already implemented, you can use it straightforwardly, or you can choose to implement ActionControlDelegate to create your own ActionControl.
 
-### Actions
+## Properties & Methods
 
-- actionsLeft: [CellAction] // Actions - Left
-- actionsRight: [CellAction] // Actions - Right
+### ActionCell
+```swift
+var animationStyle: AnimationStyle = ladder | ladder_emergence | concurrent // Action animation style
+var animationDuration: TimeInterval = 0.3 // duration of the animation
+var enableDefaultAction: Bool // Enable default action to be triggered when the content is panned to far enough, if true, the first action (on left: the leftest one, on right: the rightest one) will be the default action.
+var defaultActionTriggerPropotion: CGFloat // The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
 
-### Style
-- animationStyle: AnimationStyle = none | ladder | ladder_emergence | concurrent // Action animation style
-- defaultActionTriggerPropotion: CGFloat // The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
-- defaultActionIconColor: UIColor? // Default action's icon color
-- defaultActionBackImage: UIImage? // Default action's back image
-- defaultActionBackColor: UIColor? // Default action's back color
+func wrap(cell target: UITableViewCell, actionsLeft: [ActionControl] = [], actionsRight: [ActionControl] = [])
+```
 
-### Behavior
+### IconAction
+```swift
+init(action: String, width: CGFloat = 80, iconSize: CGSize = CGSize(width: 20, height: 20))
+```
 
-- enableDefaultAction: Bool // Enable default action to be triggered when the content is panned to far enough
-- defaultActionIndexLeft: Int // Index of default action - Left
-- defaultActionIndexRight: Int // Index of default action - Right
+### TextAction
+```swift
+init(action: String, width: CGFloat = 80)
+```
 
-### Animation
+### IconTextAction
+```swift
+init(action: String, width: CGFloat = 80, iconSize: CGSize = CGSize(width: 20, height: 20), space: CGFloat = 5, offset: CGFloat = -3)
+```
 
-- animationDuration: NSTimeInterval // Spring animation - duration of the animation
-- animationDelay: TimeInterval // Spring animation - delay of the animation
-- springDamping: CGFloat // Spring animation - spring damping of the animation
-- initialSpringVelocity: CGFloat // Spring animation - initial spring velocity of the animation
-- animationOptions: UIViewAnimationOptions // Spring animation - options of the animation
+### UITableViewCell
+```swift
+var isActionSheetOpened: Bool
+
+func setupActionsheet(side: ActionSide, actions: [ActionControl] = []) // Change actionsheet's actions
+func openActionsheet(side: ActionSide, completionHandler: (() -> ())? = nil)
+func closeActionsheet(_ completionHandler: (() -> ())? = nil)
+```
 
 ## Author
 
