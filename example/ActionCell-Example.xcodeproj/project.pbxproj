@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		420568091E1B584E001EB07B /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		420568091E1B584E001EB07B /* ActionCell_Develop.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		422E710B1D8F56B900307E3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710A1D8F56B900307E3A /* AppDelegate.swift */; };
 		422E710D1D8F56B900307E3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710C1D8F56B900307E3A /* ViewController.swift */; };
 		422E71101D8F56B900307E3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
@@ -69,7 +69,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				420568091E1B584E001EB07B /* ActionCell.framework in Embed Frameworks */,
+				420568091E1B584E001EB07B /* ActionCell_Develop.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,7 +181,7 @@
 		428DC5D51DEFD18F00E19D08 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */,
+				428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */,
 				420568061E1B4D0B001EB07B /* ActionCell.framework */,
 				428DC5DC1DEFD18F00E19D08 /* ActionCellTests.xctest */,
 			);
@@ -258,7 +258,7 @@
 				TargetAttributes = {
 					422E71061D8F56B900307E3A = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 9L9NV96FHH;
+						DevelopmentTeam = M793737CLS;
 						ProvisioningStyle = Automatic;
 					};
 					422E711A1D8F56BA00307E3A = {
@@ -307,10 +307,10 @@
 			remoteRef = 420568051E1B4D0B001EB07B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */ = {
+		428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = ActionCell.framework;
+			path = ActionCell_Develop.framework;
 			remoteRef = 428DC5D91DEFD18F00E19D08 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -515,7 +515,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 9L9NV96FHH;
+				DEVELOPMENT_TEAM = M793737CLS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -532,7 +532,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 9L9NV96FHH;
+				DEVELOPMENT_TEAM = M793737CLS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

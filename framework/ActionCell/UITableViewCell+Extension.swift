@@ -8,9 +8,9 @@
 
 import UIKit
 
-public protocol ActionSheetDelegate: NSObjectProtocol {
+public protocol ActionsheetDelegate: NSObjectProtocol {
     /// Is action sheet opened
-    var isActionSheetOpened: Bool { get }
+    var isActionsheetOpened: Bool { get }
     /// Setup action sheet
     func setupActionsheet(side: ActionSide, actions: [ActionControl])
     /// Open action sheet
@@ -19,7 +19,7 @@ public protocol ActionSheetDelegate: NSObjectProtocol {
     func closeActionsheet(_ completionHandler: (() -> ())?)
 }
 
-extension UITableViewCell: ActionSheetDelegate {
+extension UITableViewCell: ActionsheetDelegate {
     
     /// UITableViewCell's ActionCell wrapper
     var actionCell: ActionCell? {
@@ -32,13 +32,13 @@ extension UITableViewCell: ActionSheetDelegate {
         return actionCell
     }
     
-    // MARK: ActionSheetDelegate
-    public var isActionSheetOpened: Bool {
-        return actionCell?.isActionSheetOpened ?? false
+    // MARK: ActionsheetDelegate
+    public var isActionsheetOpened: Bool {
+        return actionCell?.isActionsheetOpened ?? false
     }
     
     public func setupActionsheet(side: ActionSide, actions: [ActionControl] = []) {
-        actionCell?.setupActionSheet(side: side, actions: actions)
+        actionCell?.setupActionsheet(side: side, actions: actions)
     }
     
     public func openActionsheet(side: ActionSide, completionHandler: (() -> ())? = nil) {
