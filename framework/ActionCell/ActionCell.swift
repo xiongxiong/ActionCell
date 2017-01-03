@@ -122,11 +122,9 @@ open class ActionCell: UIView {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.numberOfTapsRequired = 1
-        tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         tapGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         tapGestureRecognizer.require(toFail: panGestureRecognizer)
-        tapGestureRecognizer.isEnabled = false
         
         setupActionSheet(side: .left, actions: actionsLeft)
         setupActionSheet(side: .right, actions: actionsRight)
@@ -141,12 +139,13 @@ open class ActionCell: UIView {
         
         if isActionsheetValid(side: side) {
             contentScreenshot = takeScreenshot()
+            contentScreenshot?.isUserInteractionEnabled = true
+            contentScreenshot?.addGestureRecognizer(tapGestureRecognizer)
             addSubview(contentScreenshot!)
             
             currentActionsheet = actionsheet(side: side)
             defaultAction = defaultAction(side: side)
             backgroundColor = defaultAction?.backgroundColor
-            tapGestureRecognizer.isEnabled = true
         }
     }
     
@@ -164,8 +163,8 @@ open class ActionCell: UIView {
         isDefaultActionTriggered = false
         defaultAction = nil
         contentScreenshot?.removeFromSuperview()
+        contentScreenshot?.removeGestureRecognizer(tapGestureRecognizer)
         contentScreenshot = nil
-        tapGestureRecognizer.isEnabled = false
         
         completionHandler?()
     }
@@ -885,19 +884,7 @@ extension ActionCell: UIGestureRecognizerDelegate {
             print("\(#function) -- " + "")
         #endif
         
-        let location = gestureRecognizer.location(in: self)
-        if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-            switch side {
-            case .left:
-                if location.x >= contentScreenshot.frame.origin.x {
-                    animateOpenToClose()
-                }
-            case .right:
-                if location.x <= bounds.width + contentScreenshot.frame.origin.x {
-                    animateOpenToClose()
-                }
-            }
-        }
+        animateOpenToClose()
     }
     
     /// Enable or disable gesture recognizers
