@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		420568091E1B584E001EB07B /* ActionCell_Develop.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		422E710B1D8F56B900307E3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710A1D8F56B900307E3A /* AppDelegate.swift */; };
 		422E710D1D8F56B900307E3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E710C1D8F56B900307E3A /* ViewController.swift */; };
 		422E71101D8F56B900307E3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E710E1D8F56B900307E3A /* Main.storyboard */; };
@@ -15,23 +14,11 @@
 		422E71151D8F56BA00307E3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		422E71201D8F56BA00307E3A /* ActionCell_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E711F1D8F56BA00307E3A /* ActionCell_ExampleTests.swift */; };
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
+		42687F751E20216600CAF71E /* ActionCell_Develop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */; };
+		42687F761E20216600CAF71E /* ActionCell_Develop.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		420568051E1B4D0B001EB07B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 420567FE1E1B4136001EB07B;
-			remoteInfo = ActionCell;
-		};
-		420568071E1B5849001EB07B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4263EFE61D8D1901005006B8;
-			remoteInfo = ActionCell_Develop;
-		};
 		422E711C1D8F56BA00307E3A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 422E70FF1D8F56B900307E3A /* Project object */;
@@ -45,6 +32,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 422E71061D8F56B900307E3A;
 			remoteInfo = "ActionCell-Example";
+		};
+		42687F771E20216600CAF71E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 428DC5D41DEFD18F00E19D08 /* ActionCell.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 420567F31E1B4136001EB07B;
+			remoteInfo = ActionCell;
 		};
 		428DC5D91DEFD18F00E19D08 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -63,13 +57,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		42A231021DE823C900351DA5 /* Embed Frameworks */ = {
+		42687F791E20216600CAF71E /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				420568091E1B584E001EB07B /* ActionCell_Develop.framework in Embed Frameworks */,
+				42687F761E20216600CAF71E /* ActionCell_Develop.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42687F751E20216600CAF71E /* ActionCell_Develop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */,
-				420568061E1B4D0B001EB07B /* ActionCell.framework */,
 				428DC5DC1DEFD18F00E19D08 /* ActionCellTests.xctest */,
 			);
 			name = Products;
@@ -198,12 +192,12 @@
 				422E71031D8F56B900307E3A /* Sources */,
 				422E71041D8F56B900307E3A /* Frameworks */,
 				422E71051D8F56B900307E3A /* Resources */,
-				42A231021DE823C900351DA5 /* Embed Frameworks */,
+				42687F791E20216600CAF71E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				420568081E1B5849001EB07B /* PBXTargetDependency */,
+				42687F781E20216600CAF71E /* PBXTargetDependency */,
 			);
 			name = "ActionCell-Example";
 			productName = "ActionCell-Example";
@@ -300,13 +294,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		420568061E1B4D0B001EB07B /* ActionCell.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ActionCell.framework;
-			remoteRef = 420568051E1B4D0B001EB07B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -379,11 +366,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		420568081E1B5849001EB07B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ActionCell_Develop;
-			targetProxy = 420568071E1B5849001EB07B /* PBXContainerItemProxy */;
-		};
 		422E711D1D8F56BA00307E3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 422E71061D8F56B900307E3A /* ActionCell-Example */;
@@ -393,6 +375,11 @@
 			isa = PBXTargetDependency;
 			target = 422E71061D8F56B900307E3A /* ActionCell-Example */;
 			targetProxy = 422E71271D8F56BA00307E3A /* PBXContainerItemProxy */;
+		};
+		42687F781E20216600CAF71E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ActionCell;
+			targetProxy = 42687F771E20216600CAF71E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -514,6 +501,7 @@
 		422E71301D8F56BA00307E3A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = M793737CLS;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -531,6 +519,7 @@
 		422E71311D8F56BA00307E3A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = M793737CLS;
 				FRAMEWORK_SEARCH_PATHS = (
