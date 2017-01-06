@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ActionCell_Develop
+import ActionCell
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
