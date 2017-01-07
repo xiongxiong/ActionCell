@@ -37,6 +37,8 @@ open class ActionCell: UIView {
     // MARK: ActionCell - 行为设置
     /// Enable default action to be triggered when the content is panned to far enough
     public var enableDefaultAction: Bool = true
+    /// Enable pan gesture to interact with action cell
+    public var enablePanGesture: Bool = false
     /// The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
     public var defaultActionTriggerPropotion: CGFloat = 0.3 {
         willSet {
@@ -116,6 +118,7 @@ open class ActionCell: UIView {
         panGestureRecognizer.delegate = self
         panGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         panGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
+        panGestureRecognizer.isEnabled = enablePanGesture
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
