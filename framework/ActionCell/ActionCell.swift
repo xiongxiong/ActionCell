@@ -104,12 +104,10 @@ open class ActionCell: UIView {
         
         swipeLeftGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeLeftGestureRecognizer)
-        swipeLeftGestureRecognizer.delegate = self
         swipeLeftGestureRecognizer.direction = .left
         
         swipeRightGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeRightGestureRecognizer)
-        swipeRightGestureRecognizer.delegate = self
         swipeRightGestureRecognizer.direction = .right
         swipeRightGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         
@@ -120,7 +118,6 @@ open class ActionCell: UIView {
         panGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
-        tapGestureRecognizer.delegate = self
         tapGestureRecognizer.numberOfTapsRequired = 1
         tapGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         tapGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
@@ -593,6 +590,115 @@ open class ActionCell: UIView {
         }
     }
     
+    // MARK: Handle Gestures
+    func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "")
+        #endif
+        
+        switch gestureRecognizer.state {
+        case .ended:
+            if gestureRecognizer.direction == UISwipeGestureRecognizerDirection.left {
+                respondToSwipe(side: .right)
+            } else {
+                respondToSwipe(side: .left)
+            }
+        default:
+            break
+        }
+    }
+    
+    func respondToSwipe(side: ActionSide) {
+        if let currentActionsheet = currentActionsheet {
+            if currentActionsheet.side == side {
+                if enableDefaultAction {
+                    animateOpenToTrigger()
+                }
+            } else {
+                animateOpenToClose()
+            }
+        } else {
+            openActionsheet(side: side)
+        }
+    }
+    
+    func handlePanGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "")
+        #endif
+        
+        let translation = gestureRecognizer.translation(in: self)
+        let velocity = gestureRecognizer.velocity(in: self)
+        switch gestureRecognizer.state {
+        case .began, .changed:
+            #if DEVELOPMENT
+                print("state -- " + "began | changed")
+            #endif
+            
+            var actionSide: ActionSide? = nil
+            if let contentScreenshot = contentScreenshot {
+                let contentPosition = contentScreenshot.frame.origin.x
+                actionSide = contentPosition == 0 ? (velocity.x == 0 ? nil : (velocity.x > 0 ? .left : .right)) : (contentPosition > 0 ? .left : .right)
+            } else {
+                actionSide = velocity.x > 0 ? .left : .right
+            }
+            if actionSide != currentActionsheet?.side {
+                clearActionCell()
+                if let actionSide = actionSide {
+                    setupActionCell(side: actionSide)
+                }
+            }
+            
+            if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side , isActionsheetValid(side: side) {
+                switch positionSection(side: side, position: contentScreenshot.frame.origin.x) {
+                case .open_TriggerPre, .triggerPre_Trigger:
+                    if enableDefaultAction == true { fallthrough }
+                default:
+                    contentScreenshot.frame.origin.x += translation.x
+                    gestureRecognizer.setTranslation(CGPoint.zero, in: self)
+                    animateToPosition(contentScreenshot.frame.origin.x)
+                }
+            }
+        case .ended, .cancelled:
+            #if DEVELOPMENT
+                print("state -- " + "ended | cancelled")
+            #endif
+            
+            var closure: (() -> ())? = nil
+            if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
+                switch positionSection(side: side, position: contentScreenshot.frame.origin.x) {
+                case .close_OpenPre:
+                    closure = { [weak self] in
+                        self?.animateOpenToClose()
+                    }
+                case .openPre_Open:
+                    closure = { [weak self] in
+                        self?.animateCloseToOpen()
+                    }
+                case .open_TriggerPre:
+                    closure = enableDefaultAction ? { [weak self] in
+                        self?.animateTriggerToOpen()
+                        } : nil
+                case .triggerPre_Trigger:
+                    closure = enableDefaultAction ? { [weak self] in
+                        self?.animateOpenToTrigger()
+                        } : nil
+                }
+                animateToPosition(contentScreenshot.frame.origin.x, completionHandler: closure)
+            }
+        default:
+            break
+        }
+    }
+    
+    func handleTapGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "")
+        #endif
+        
+        animateOpenToClose()
+    }
+    
     // MARK: Position of cell state
     /// Threshold for state Close
     func positionForClose() -> CGFloat {
@@ -696,131 +802,8 @@ open class ActionCell: UIView {
 
 extension ActionCell: UIGestureRecognizerDelegate {
     
-    // MARK: UIGestureRecognizerDelegate
-    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        #if DEVELOPMENT
-            print("\(#function) -- " + "")
-        #endif
-        
-        if let g = gestureRecognizer as? UIPanGestureRecognizer {
-            let velocity = g.velocity(in: self)
-            if fabs(velocity.x) > fabs(velocity.y) {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return true
-        }
-    }
-    
-    // MARK: Handle Gestures
-    func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
-        #if DEVELOPMENT
-            print("\(#function) -- " + "")
-        #endif
-        
-        switch gestureRecognizer.state {
-        case .ended:
-            if gestureRecognizer.direction == UISwipeGestureRecognizerDirection.left {
-                respondToSwipe(side: .right)
-            } else {
-                respondToSwipe(side: .left)
-            }
-        default:
-            break
-        }
-    }
-    
-    func respondToSwipe(side: ActionSide) {
-        if let currentActionsheet = currentActionsheet {
-            if currentActionsheet.side == side {
-                if enableDefaultAction {
-                    animateOpenToTrigger()
-                }
-            } else {
-                animateOpenToClose()
-            }
-        } else {
-            openActionsheet(side: side)
-        }
-    }
-    
-    func handlePanGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
-        #if DEVELOPMENT
-            print("\(#function) -- " + "")
-        #endif
-        
-        let translation = gestureRecognizer.translation(in: self)
-        let velocity = gestureRecognizer.velocity(in: self)
-        switch gestureRecognizer.state {
-        case .began, .changed:
-            #if DEVELOPMENT
-                print("state -- " + "began | changed")
-            #endif
-            
-            var actionSide: ActionSide? = nil
-            if let contentScreenshot = contentScreenshot {
-                let contentPosition = contentScreenshot.frame.origin.x
-                actionSide = contentPosition == 0 ? (velocity.x == 0 ? nil : (velocity.x > 0 ? .left : .right)) : (contentPosition > 0 ? .left : .right)
-            } else {
-                actionSide = velocity.x > 0 ? .left : .right
-            }
-            if actionSide != currentActionsheet?.side {
-                clearActionCell()
-                if let actionSide = actionSide {
-                    setupActionCell(side: actionSide)
-                }
-            }
-            
-            if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side , isActionsheetValid(side: side) {
-                switch positionSection(side: side, position: contentScreenshot.frame.origin.x) {
-                case .open_TriggerPre, .triggerPre_Trigger:
-                    if enableDefaultAction == true { fallthrough }
-                default:
-                    contentScreenshot.frame.origin.x += translation.x
-                    gestureRecognizer.setTranslation(CGPoint.zero, in: self)
-                    animateToPosition(contentScreenshot.frame.origin.x)
-                }
-            }
-        case .ended, .cancelled:
-            #if DEVELOPMENT
-                print("state -- " + "ended | cancelled")
-            #endif
-            
-            var closure: (() -> ())? = nil
-            if let contentScreenshot = contentScreenshot, let side = currentActionsheet?.side {
-                switch positionSection(side: side, position: contentScreenshot.frame.origin.x) {
-                case .close_OpenPre:
-                    closure = { [weak self] in
-                        self?.animateOpenToClose()
-                    }
-                case .openPre_Open:
-                    closure = { [weak self] in
-                        self?.animateCloseToOpen()
-                    }
-                case .open_TriggerPre:
-                    closure = enableDefaultAction ? { [weak self] in
-                        self?.animateTriggerToOpen()
-                        } : nil
-                case .triggerPre_Trigger:
-                    closure = enableDefaultAction ? { [weak self] in
-                        self?.animateOpenToTrigger()
-                        } : nil
-                }
-                animateToPosition(contentScreenshot.frame.origin.x, completionHandler: closure)
-            }
-        default:
-            break
-        }
-    }
-    
-    func handleTapGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
-        #if DEVELOPMENT
-            print("\(#function) -- " + "")
-        #endif
-        
-        animateOpenToClose()
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 

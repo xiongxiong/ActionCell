@@ -11,7 +11,6 @@
 		420567F61E1B4136001EB07B /* ActionControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E70FB1D8F50B700307E3A /* ActionControl.swift */; };
 		420567F91E1B4136001EB07B /* ActionCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4263EFEA1D8D1901005006B8 /* ActionCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		420568021E1B420B001EB07B /* ActionCell-Develop.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568001E1B420B001EB07B /* ActionCell-Develop.plist */; };
-		420568031E1B420B001EB07B /* ActionCell.plist in Resources */ = {isa = PBXBuildFile; fileRef = 420568011E1B420B001EB07B /* ActionCell.plist */; };
 		4205680C1E1B7873001EB07B /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4205680B1E1B7873001EB07B /* UITableViewCell+Extension.swift */; };
 		4263EFF61D8D1901005006B8 /* ActionCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4263EFF51D8D1901005006B8 /* ActionCellTests.swift */; };
 /* End PBXBuildFile section */
@@ -159,7 +158,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = snowflyer;
 				TargetAttributes = {
 					4263EFEF1D8D1901005006B8 = {
@@ -191,7 +190,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				420568031E1B420B001EB07B /* ActionCell.plist in Resources */,
 				420568021E1B420B001EB07B /* ActionCell-Develop.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

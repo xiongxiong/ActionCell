@@ -14,8 +14,8 @@
 		422E71151D8F56BA00307E3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 422E71131D8F56BA00307E3A /* LaunchScreen.storyboard */; };
 		422E71201D8F56BA00307E3A /* ActionCell_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E711F1D8F56BA00307E3A /* ActionCell_ExampleTests.swift */; };
 		422E712B1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E712A1D8F56BA00307E3A /* ActionCell_ExampleUITests.swift */; };
-		42687F751E20216600CAF71E /* ActionCell_Develop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */; };
-		42687F761E20216600CAF71E /* ActionCell_Develop.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42687F751E20216600CAF71E /* ActionCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; };
+		42687F761E20216600CAF71E /* ActionCell.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,7 +63,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				42687F761E20216600CAF71E /* ActionCell_Develop.framework in Embed Frameworks */,
+				42687F761E20216600CAF71E /* ActionCell.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,7 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42687F751E20216600CAF71E /* ActionCell_Develop.framework in Frameworks */,
+				42687F751E20216600CAF71E /* ActionCell.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,7 +176,7 @@
 		428DC5D51DEFD18F00E19D08 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */,
+				428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */,
 				428DC5DC1DEFD18F00E19D08 /* ActionCellTests.xctest */,
 			);
 			name = Products;
@@ -294,10 +294,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		428DC5DA1DEFD18F00E19D08 /* ActionCell_Develop.framework */ = {
+		428DC5DA1DEFD18F00E19D08 /* ActionCell.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = ActionCell_Develop.framework;
+			path = ActionCell.framework;
 			remoteRef = 428DC5D91DEFD18F00E19D08 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -513,6 +513,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.snowflyer.ActionCell-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -531,6 +532,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.snowflyer.ActionCell-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
