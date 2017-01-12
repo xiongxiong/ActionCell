@@ -70,6 +70,8 @@ open class ActionCell: UIView {
     var panGestureRecognizer: UIPanGestureRecognizer!
     /// tapGestureRecognizer
     var tapGestureRecognizer: UITapGestureRecognizer!
+    /// tempTapGestureRecognizer
+    var tempTapGestureRecognizer: UITapGestureRecognizer!
     /// Screenshot of the cell
     var contentScreenshot: UIImageView?
     /// Current actionsheet
@@ -85,6 +87,10 @@ open class ActionCell: UIView {
     
     /// If the cell's action sheet is about to open, ask delegate to close other cell's action sheet
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "")
+        #endif
+        
         super.touchesBegan(touches, with: event)
         next?.touchesBegan(touches, with: event)
         
@@ -107,10 +113,12 @@ open class ActionCell: UIView {
         
         swipeLeftGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeLeftGestureRecognizer)
+        swipeLeftGestureRecognizer.delegate = self
         swipeLeftGestureRecognizer.direction = .left
         
         swipeRightGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
         addGestureRecognizer(swipeRightGestureRecognizer)
+        swipeRightGestureRecognizer.delegate = self
         swipeRightGestureRecognizer.direction = .right
         swipeRightGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         
@@ -121,11 +129,21 @@ open class ActionCell: UIView {
         panGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         panGestureRecognizer.isEnabled = enablePanGesture
         
-        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
+        tapGestureRecognizer = UITapGestureRecognizer()
+        addGestureRecognizer(tapGestureRecognizer)
+        tapGestureRecognizer.delegate = self
         tapGestureRecognizer.numberOfTapsRequired = 1
+        tapGestureRecognizer.cancelsTouchesInView = false
         tapGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
         tapGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
         tapGestureRecognizer.require(toFail: panGestureRecognizer)
+        tapGestureRecognizer.isEnabled = false
+        
+        tempTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:)))
+        tempTapGestureRecognizer.numberOfTapsRequired = 1
+        tempTapGestureRecognizer.require(toFail: swipeLeftGestureRecognizer)
+        tempTapGestureRecognizer.require(toFail: swipeRightGestureRecognizer)
+        tempTapGestureRecognizer.require(toFail: panGestureRecognizer)
         
         setupActionsheet(side: .left, actions: actionsLeft)
         setupActionsheet(side: .right, actions: actionsRight)
@@ -141,12 +159,14 @@ open class ActionCell: UIView {
         if isActionsheetValid(side: side) {
             contentScreenshot = takeScreenshot()
             contentScreenshot?.isUserInteractionEnabled = true
-            contentScreenshot?.addGestureRecognizer(tapGestureRecognizer)
+            contentScreenshot?.addGestureRecognizer(tempTapGestureRecognizer)
             addSubview(contentScreenshot!)
             
             currentActionsheet = actionsheet(side: side)
             defaultAction = defaultAction(side: side)
             backgroundColor = defaultAction?.backgroundColor
+            
+            tapGestureRecognizer.isEnabled = true
         }
     }
     
@@ -161,8 +181,11 @@ open class ActionCell: UIView {
         }
         
         backgroundColor = UIColor.clear
+        tapGestureRecognizer.isEnabled = false
+        
         isDefaultActionTriggered = false
         defaultAction = nil
+        
         contentScreenshot?.removeFromSuperview()
         contentScreenshot?.removeGestureRecognizer(tapGestureRecognizer)
         contentScreenshot = nil
@@ -815,14 +838,14 @@ extension ActionCell: UIGestureRecognizerDelegate {
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if (gestureRecognizer == panGestureRecognizer || gestureRecognizer == swipeLeftGestureRecognizer || gestureRecognizer == swipeRightGestureRecognizer) && ( otherGestureRecognizer == delegate?.tableView.panGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnSwipeGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnTapGestureRecognizer) {
+        if (gestureRecognizer == panGestureRecognizer || gestureRecognizer == tapGestureRecognizer || gestureRecognizer == swipeLeftGestureRecognizer || gestureRecognizer == swipeRightGestureRecognizer) && ( otherGestureRecognizer == delegate?.tableView.panGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnSwipeGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnTapGestureRecognizer) {
             return true
         }
         return false
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if (gestureRecognizer == panGestureRecognizer || gestureRecognizer == swipeLeftGestureRecognizer || gestureRecognizer == swipeRightGestureRecognizer) && ( otherGestureRecognizer == delegate?.tableView.panGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnSwipeGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnTapGestureRecognizer) {
+        if (gestureRecognizer == panGestureRecognizer || gestureRecognizer == tapGestureRecognizer || gestureRecognizer == swipeLeftGestureRecognizer || gestureRecognizer == swipeRightGestureRecognizer) && ( otherGestureRecognizer == delegate?.tableView.panGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnSwipeGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnTapGestureRecognizer) {
             return false
         }
         return true
