@@ -236,6 +236,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return cell
         case 3:
             let cell = CustomTableViewCell()
+            cell.accessoryType = .disclosureIndicator
             cell.button.addTarget(self, action: #selector(cellButtonClicked), for: .touchUpInside)
             let wrapper = ActionCell()
             wrapper.delegate = self

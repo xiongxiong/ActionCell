@@ -96,10 +96,10 @@ open class ActionCell: UIView {
         target.contentView.addSubview(container)
         target.contentView.sendSubview(toBack: container)
         container.translatesAutoresizingMaskIntoConstraints = false
-        target.addConstraint(NSLayoutConstraint(item: container, attribute: .leading, relatedBy: .equal, toItem: target, attribute: .leading, multiplier: 1, constant: 0))
-        target.addConstraint(NSLayoutConstraint(item: container, attribute: .trailing, relatedBy: .equal, toItem: target, attribute: .trailing, multiplier: 1, constant: 0))
-        target.addConstraint(NSLayoutConstraint(item: container, attribute: .top, relatedBy: .equal, toItem: target, attribute: .top, multiplier: 1, constant: 0))
-        target.addConstraint(NSLayoutConstraint(item: container, attribute: .bottom, relatedBy: .equal, toItem: target, attribute: .bottom, multiplier: 1, constant: 0))
+        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .leading, relatedBy: .equal, toItem: target.contentView, attribute: .leading, multiplier: 1, constant: 0))
+        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .trailing, relatedBy: .equal, toItem: target.contentView, attribute: .trailing, multiplier: 1, constant: 0))
+        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .top, relatedBy: .equal, toItem: target.contentView, attribute: .top, multiplier: 1, constant: 0))
+        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .bottom, relatedBy: .equal, toItem: target.contentView, attribute: .bottom, multiplier: 1, constant: 0))
         
         swipeLeftGestureRecognizer = {
             let the = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
