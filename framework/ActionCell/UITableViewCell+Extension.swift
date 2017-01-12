@@ -49,3 +49,19 @@ extension UITableViewCell: ActionsheetDelegate {
         actionCell?.closeActionsheet(completionHandler)
     }
 }
+
+extension UITableViewCell {
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "")
+        #endif
+        
+        super.touchesBegan(touches, with: event)
+        next?.touchesBegan(touches, with: event)
+        
+        if !isActionsheetOpened {
+            actionCell?.delegate?.closeActionsheet()
+        }
+    }
+}

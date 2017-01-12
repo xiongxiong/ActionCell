@@ -19,8 +19,8 @@ open class ActionControl: UIControl {
     
     /// Delegate
     weak var delegate: ActionControlDelegate? = nil
-    weak var constraintLeading: NSLayoutConstraint? = nil
-    weak var constraintTrailing: NSLayoutConstraint? = nil
+    weak var constraintHead: NSLayoutConstraint? = nil
+    weak var constraintTail: NSLayoutConstraint? = nil
     
     public init(action: String, width: CGFloat) {
         self.action = action
@@ -47,7 +47,13 @@ open class ActionControl: UIControl {
         delegate?.didActionTriggered(action: action)
     }
     
-    func setState(_ state: State) {
+    func update(position: Position) {
+        #if DEVELOPMENT
+            print("\(#function) -- " + "position: \(position)")
+        #endif
+    }
+    
+    func update(state: State) {
         #if DEVELOPMENT
             print("\(#function) -- " + "state: \(state)")
         #endif
@@ -63,10 +69,13 @@ open class ActionControl: UIControl {
 
 extension ActionControl {
     
+    enum Position {
+        case close // action stands close of the cell
+        case opening(progress: CGFloat) // action state between close & open, progress is between 0 & 1
+        case open // action stands open of the cell
+    }
+    
     enum State {
-        case outside // action stands outside of the cell
-        case outside_inside(progress: CGFloat) // action state between outside & inside, progress is between 0 & 1
-        case inside // action stands inside of the cell
         case active // action is to be triggered
         case inactive // other action is to be triggered, and this not
     }
@@ -93,11 +102,11 @@ open class IconAction: ActionControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setState(_ state: ActionControl.State) {
-        super.setState(state)
+    override func update(position: ActionControl.Position) {
+        super.update(position: position)
         
-        switch state {
-        case let .outside_inside(progress):
+        switch position {
+        case let .opening(progress):
             icon.alpha = progress
         default:
             icon.alpha = 1
@@ -136,11 +145,11 @@ open class TextAction: ActionControl {
         return CGSize(width: label.intrinsicContentSize.width + 20, height: bounds.height)
     }
     
-    override func setState(_ state: ActionControl.State) {
-        super.setState(state)
+    override func update(position: ActionControl.Position) {
+        super.update(position: position)
         
-        switch state {
-        case let .outside_inside(progress):
+        switch position {
+        case let .opening(progress):
             label.alpha = progress
         default:
             label.alpha = 1
@@ -196,11 +205,11 @@ open class IconTextAction: ActionControl {
         return CGSize(width: max(iconSize.width, label.intrinsicContentSize.width) + 20, height: bounds.height)
     }
     
-    override func setState(_ state: ActionControl.State) {
-        super.setState(state)
+    override func update(position: ActionControl.Position) {
+        super.update(position: position)
         
-        switch state {
-        case let .outside_inside(progress):
+        switch position {
+        case let .opening(progress):
             icon.alpha = progress
             label.alpha = progress
         default:
