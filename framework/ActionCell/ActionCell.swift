@@ -11,6 +11,7 @@ import UIKit
 public protocol ActionCellDelegate: NSObjectProtocol {
     
     var tableView: UITableView! { get }
+    var navigationController: UINavigationController? { get }
     /// Do something when action is triggered
     func didActionTriggered(cell: UITableViewCell, action: String)
 }
@@ -38,7 +39,7 @@ open class ActionCell: UIView {
     /// Enable default action to be triggered when the content is panned to far enough
     public var enableDefaultAction: Bool = true
     /// Enable pan gesture to interact with action cell
-    public var enablePanGesture: Bool = false
+    public var enablePanGesture: Bool = true
     /// The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
     public var defaultActionTriggerPropotion: CGFloat = 0.3 {
         willSet {
@@ -805,7 +806,25 @@ open class ActionCell: UIView {
 
 extension ActionCell: UIGestureRecognizerDelegate {
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == panGestureRecognizer, let gesture = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = gesture.velocity(in: self)
+            return abs(velocity.x) > abs(velocity.y)
+        }
+        return true
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer == panGestureRecognizer || gestureRecognizer == swipeLeftGestureRecognizer || gestureRecognizer == swipeRightGestureRecognizer) && ( otherGestureRecognizer == delegate?.tableView.panGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnSwipeGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnTapGestureRecognizer) {
+            return true
+        }
+        return false
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer == panGestureRecognizer || gestureRecognizer == swipeLeftGestureRecognizer || gestureRecognizer == swipeRightGestureRecognizer) && ( otherGestureRecognizer == delegate?.tableView.panGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnSwipeGestureRecognizer || otherGestureRecognizer == delegate?.navigationController?.barHideOnTapGestureRecognizer) {
+            return false
+        }
         return true
     }
 }

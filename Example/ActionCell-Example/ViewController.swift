@@ -16,7 +16,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        navigationController?.hidesBarsOnSwipe = true
+        navigationController?.hidesBarsOnTap = true
+        
         view.backgroundColor = UIColor.white
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
