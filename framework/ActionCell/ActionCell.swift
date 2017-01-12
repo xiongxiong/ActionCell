@@ -56,8 +56,6 @@ open class ActionCell: UIView {
     // MARK: ActionCell - 私有属性
     /// cell
     weak var cell: UITableViewCell?
-    /// actionsheet container
-    var container: UIView = UIView()
     /// actionsheet - Left
     var actionsheetLeft: Actionsheet = Actionsheet(side: .left)
     /// actionsheet - Right
@@ -86,31 +84,17 @@ open class ActionCell: UIView {
     }
     
     // MARK: Initialization
-    public func wrap(cell target: UITableViewCell, actionsLeft: [ActionControl] = [], actionsRight: [ActionControl] = []) {
-        cell = target
-        
-        target.selectionStyle = .none
-        target.addSubview(self)
-        target.sendSubview(toBack: self)
-        
-        target.contentView.addSubview(container)
-        target.contentView.sendSubview(toBack: container)
-        container.translatesAutoresizingMaskIntoConstraints = false
-        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .leading, relatedBy: .equal, toItem: target.contentView, attribute: .leading, multiplier: 1, constant: 0))
-        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .trailing, relatedBy: .equal, toItem: target.contentView, attribute: .trailing, multiplier: 1, constant: 0))
-        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .top, relatedBy: .equal, toItem: target.contentView, attribute: .top, multiplier: 1, constant: 0))
-        target.contentView.addConstraint(NSLayoutConstraint(item: container, attribute: .bottom, relatedBy: .equal, toItem: target.contentView, attribute: .bottom, multiplier: 1, constant: 0))
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         swipeLeftGestureRecognizer = {
             let the = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
-            target.contentView.addGestureRecognizer(the)
             the.delegate = self
             the.direction = .left
             return the
         }()
         swipeRightGestureRecognizer = {
             let the = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeGestureRecognizer(_:)))
-            target.contentView.addGestureRecognizer(the)
             the.delegate = self
             the.direction = .right
             the.require(toFail: swipeLeftGestureRecognizer)
@@ -118,7 +102,6 @@ open class ActionCell: UIView {
         }()
         panGestureRecognizer = {
             let the = UIPanGestureRecognizer(target: self, action: #selector(handlePanGestureRecognizer(_:)))
-            target.contentView.addGestureRecognizer(the)
             the.delegate = self
             the.require(toFail: swipeLeftGestureRecognizer)
             the.require(toFail: swipeRightGestureRecognizer)
@@ -126,7 +109,6 @@ open class ActionCell: UIView {
         }()
         tapGestureRecognizer = {
             let the = UITapGestureRecognizer()
-            target.contentView.addGestureRecognizer(the)
             the.delegate = self
             the.numberOfTapsRequired = 1
             the.cancelsTouchesInView = false
@@ -144,6 +126,29 @@ open class ActionCell: UIView {
             the.require(toFail: panGestureRecognizer)
             return the
         }()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: Wrap
+    public func wrap(cell target: UITableViewCell, actionsLeft: [ActionControl] = [], actionsRight: [ActionControl] = []) {
+        cell = target
+        
+        target.selectionStyle = .none
+        target.addSubview(self)
+        target.sendSubview(toBack: self)
+        translatesAutoresizingMaskIntoConstraints = false
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: target, attribute: .leading, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: target, attribute: .trailing, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: target, attribute: .top, multiplier: 1, constant: 0))
+        target.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: target, attribute: .bottom, multiplier: 1, constant: 0))
+        
+        target.addGestureRecognizer(swipeLeftGestureRecognizer)
+        target.addGestureRecognizer(swipeRightGestureRecognizer)
+        target.addGestureRecognizer(panGestureRecognizer)
+        target.addGestureRecognizer(tapGestureRecognizer)
         
         setupActionsheet(side: .left, actions: actionsLeft)
         setupActionsheet(side: .right, actions: actionsRight)
@@ -157,16 +162,16 @@ open class ActionCell: UIView {
         #endif
         
         if isActionsheetValid(side: side) {
-            cell!.contentView.bringSubview(toFront: container)
+            cell!.bringSubview(toFront: self)
             
-            contentScreenshot = takeScreenshot()
+            contentScreenshot = UIImageView(image: screenshotImageOfView(view: cell!))
             contentScreenshot?.isUserInteractionEnabled = true
             contentScreenshot?.addGestureRecognizer(tempTapGestureRecognizer)
-            container.addSubview(contentScreenshot!)
+            addSubview(contentScreenshot!)
             
             currentActionsheet = actionsheet(side: side)
             defaultAction = defaultAction(side: side)
-            container.backgroundColor = defaultAction?.backgroundColor
+            backgroundColor = defaultAction?.backgroundColor
             
             tapGestureRecognizer.isEnabled = true
         }
@@ -191,8 +196,8 @@ open class ActionCell: UIView {
         contentScreenshot?.removeGestureRecognizer(tempTapGestureRecognizer)
         contentScreenshot = nil
         
-        container.backgroundColor = UIColor.clear
-        cell!.contentView.sendSubview(toBack: container)
+        backgroundColor = UIColor.clear
+        cell!.sendSubview(toBack: self)
         
         completionHandler?()
     }
@@ -209,7 +214,7 @@ open class ActionCell: UIView {
         actionsheet(side: side).actions = actions
         actionsheet(side: side).actions.reversed().forEach {
             $0.delegate = self
-            container.addSubview($0)
+            addSubview($0)
         }
         resetActionConstraints(side: side)
         resetActionAttributes(side: side)
@@ -244,27 +249,27 @@ open class ActionCell: UIView {
         
         actionsheet(side: side).actions.enumerated().forEach { (index, action) in
             action.translatesAutoresizingMaskIntoConstraints = false
-            container.addConstraint(NSLayoutConstraint(item: action, attribute: .top, relatedBy: .equal, toItem: container, attribute: .top, multiplier: 1, constant: 0))
-            container.addConstraint(NSLayoutConstraint(item: action, attribute: .bottom, relatedBy: .equal, toItem: container, attribute: .bottom, multiplier: 1, constant: 0))
+            addConstraint(NSLayoutConstraint(item: action, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+            addConstraint(NSLayoutConstraint(item: action, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
             switch side {
             case .left:
-                let constraintHead = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .leading, multiplier: 1, constant: -1 * action.width)
+                let constraintHead = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: -1 * action.width)
                 action.constraintHead = constraintHead
-                container.addConstraint(constraintHead)
-                let constraintTail = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .leading, multiplier: 1, constant: 0)
+                addConstraint(constraintHead)
+                let constraintTail = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
                 action.constraintTail = constraintTail
-                container.addConstraint(constraintTail)
+                addConstraint(constraintTail)
             case .right:
-                let constraintHead = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .trailing, multiplier: 1, constant: action.width)
+                let constraintHead = NSLayoutConstraint(item: action, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: action.width)
                 action.constraintHead = constraintHead
-                container.addConstraint(constraintHead)
-                let constraintTail = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .trailing, multiplier: 1, constant: 0)
+                addConstraint(constraintHead)
+                let constraintTail = NSLayoutConstraint(item: action, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
                 action.constraintTail = constraintTail
-                container.addConstraint(constraintTail)
+                addConstraint(constraintTail)
             }
         }
-        container.setNeedsLayout()
-        container.layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
     /// Setup actions' attributes
@@ -390,7 +395,7 @@ open class ActionCell: UIView {
             action.constraintTail?.constant = constantTail
             action.constraintHead?.constant = constantHead
         }
-        container.setNeedsLayout()
+        setNeedsLayout()
     }
     
     // MARK: Default Action
@@ -413,7 +418,7 @@ open class ActionCell: UIView {
                 if let action = self.defaultAction {
                     self.updateActionConstraints(action: action, orientation: .triggered, constantHead: position + (side == .left ? -1 : 1) * action.width, constantTail: position)
                 }
-                self.container.layoutIfNeeded()
+                self.layoutIfNeeded()
                 }, completion: { [unowned self] _ in
                     self.cell!.isUserInteractionEnabled = true
                     completionHandler?()
@@ -431,7 +436,7 @@ open class ActionCell: UIView {
             self.cell!.isUserInteractionEnabled = false
             UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveLinear], animations: { [unowned self] in
                 self.setActionsheet(for: .position(contentScreenshot.frame.origin.x), orientation: .close)
-                self.container.layoutIfNeeded()
+                self.layoutIfNeeded()
                 }, completion: { [unowned self] _ in
                     self.cell!.isUserInteractionEnabled = true
                     self.actionsheet(side: side).actions.forEach {
@@ -454,7 +459,7 @@ open class ActionCell: UIView {
             UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveLinear], animations: { [unowned self] in
                 contentScreenshot.frame.origin.x = self.positionForClose()
                 self.setActionsheet(for: .close, orientation: .close)
-                self.container.layoutIfNeeded()
+                self.layoutIfNeeded()
                 }, completion: { [unowned self] _ in
                     self.cell!.isUserInteractionEnabled = true
                     self.clearActionCell()
@@ -474,7 +479,7 @@ open class ActionCell: UIView {
             UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveLinear], animations: { [unowned self] in
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.setActionsheet(for: .open, orientation: .triggered)
-                self.container.layoutIfNeeded()
+                self.layoutIfNeeded()
                 }, completion: { [unowned self] _ in
                     self.cell!.isUserInteractionEnabled = true
                     completionHandler?()
@@ -493,7 +498,7 @@ open class ActionCell: UIView {
             UIView.animate(withDuration: animationDuration, delay: 0, options: [.curveLinear], animations: { [unowned self] in
                 contentScreenshot.frame.origin.x = self.positionForOpen(side: side)
                 self.setActionsheet(for: .open, orientation: .close)
-                self.container.layoutIfNeeded()
+                self.layoutIfNeeded()
                 }, completion: { [unowned self] _ in
                     self.cell!.isUserInteractionEnabled = true
                     completionHandler?()
@@ -520,7 +525,7 @@ open class ActionCell: UIView {
                 if let action = self.defaultAction {
                     self.updateActionConstraints(action: action, orientation: .triggered, constantHead: position + (side == .left ? -1 : 1) * action.width, constantTail: position)
                 }
-                self.container.layoutIfNeeded()
+                self.layoutIfNeeded()
                 }, completion: { [unowned self] _ in
                     self.cell!.isUserInteractionEnabled = true
                     let action = self.defaultAction
@@ -597,8 +602,8 @@ open class ActionCell: UIView {
             print("\(#function) -- " + "")
         #endif
         
-        let translation = gestureRecognizer.translation(in: cell!.contentView)
-        let velocity = gestureRecognizer.velocity(in: cell!.contentView)
+        let translation = gestureRecognizer.translation(in: cell!)
+        let velocity = gestureRecognizer.velocity(in: cell!)
         switch gestureRecognizer.state {
         case .began, .changed:
             #if DEVELOPMENT
@@ -696,9 +701,9 @@ open class ActionCell: UIView {
     func positionForTrigger(side: ActionSide) -> CGFloat {
         switch side {
         case .left:
-            return cell!.contentView.frame.width
+            return cell!.frame.width
         case .right:
-            return -1 * cell!.contentView.frame.width
+            return -1 * cell!.frame.width
         }
     }
     
@@ -752,23 +757,6 @@ open class ActionCell: UIView {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image!
-    }
-    
-    /// Create screenshot of cell's contentView
-    func takeScreenshot() -> UIImageView {
-        #if DEVELOPMENT
-            print("\(#function) -- " + "")
-        #endif
-        
-        let isBackgroundClear = cell!.contentView.backgroundColor == nil
-        if isBackgroundClear {
-            cell!.contentView.backgroundColor = UIColor.white
-        }
-        let screenshot = UIImageView(image: screenshotImageOfView(view: cell!.contentView))
-        if isBackgroundClear {
-            cell!.contentView.backgroundColor = nil
-        }
-        return screenshot
     }
 }
 
