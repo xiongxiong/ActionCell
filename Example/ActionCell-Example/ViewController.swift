@@ -27,6 +27,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.description())
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.description())
 
         view.addSubview(output)
         output.translatesAutoresizingMaskIntoConstraints = false
@@ -43,13 +44,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 5
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch (indexPath as NSIndexPath).row {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description(), for: indexPath)
             cell.textLabel?.text = "style: ladder"
             let wrapper = ActionCell()
             wrapper.delegate = self
@@ -111,7 +112,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             ])
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description(), for: indexPath)
             cell.textLabel?.text = "style: ladder_emergence"
             let wrapper = ActionCell()
             wrapper.delegate = self
@@ -173,7 +174,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             ])
             return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description())!
+            let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.description(), for: indexPath)
             cell.textLabel?.text = "style: concurrent"
             let wrapper = ActionCell()
             wrapper.delegate = self
@@ -235,7 +236,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             ])
             return cell
         case 3:
-            let cell = CustomTableViewCell()
+            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.description(), for: indexPath) as! CustomTableViewCell
             cell.accessoryType = .disclosureIndicator
             cell.button.addTarget(self, action: #selector(cellButtonClicked), for: .touchUpInside)
             let wrapper = ActionCell()
@@ -298,7 +299,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             ])
             return cell
         default:
-            return UITableViewCell()
+            return tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.description(), for: indexPath)
         }
     }
     
