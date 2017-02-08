@@ -299,7 +299,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             ])
             return cell
         default:
-            return tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.description(), for: indexPath)
+            return tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.description(), for: indexPath) as! CustomTableViewCell
         }
     }
     
