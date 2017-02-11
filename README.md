@@ -3,7 +3,7 @@
 [![CI Status](http://img.shields.io/travis/wonderbear/ActionCell.svg?style=flat)](https://travis-ci.org/wonderbear/ActionCell) [![Version](https://img.shields.io/cocoapods/v/ActionCell.svg?style=flat)](http://cocoapods.org/pods/ActionCell) [![Platform](https://img.shields.io/cocoapods/p/ActionCell.svg?style=flat)](http://cocoapods.org/pods/ActionCell)
 [![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://developer.apple.com/swift/) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![License](https://img.shields.io/cocoapods/l/ActionCell.svg?style=flat)](http://cocoapods.org/pods/ActionCell)
 
-ActionCell, wraps UITableViewCell with actions elegantly, no need to inherit UITableViewCell, use swiping to trigger actions (known from the Mailbox App). I love it.
+ActionCell, wraps UITableViewCell with actions, no need to inherit UITableViewCell, use swiping to trigger actions (known from the Mailbox App). I love it.
 
 ![ActionCell](ScreenShot/ActionCell.gif "ActionCell")
 
@@ -35,7 +35,7 @@ ActionCell, wraps UITableViewCell with actions elegantly, no need to inherit UIT
 
 ## Attention
 
-From version 2.0, the ActionCell framework is redesigned, so API is different from version 2.* to 1.*, if you used old version before, you must do some change, but not much.
+From version 2.0, the ActionCell framework redesigned, so API is different from version 2.* to 1.*, if you used old version before, you must do some change, but not much.
 
 ## Installation
 
@@ -86,7 +86,7 @@ Run `carthage update` to build the framework and drag the built `ActionCell.fram
 
 ### Manually
 
-If you prefer not to use either of the aforementioned dependency managers, you can integrate ActionCell into your project manually.
+If you prefer not to use either of the dependency managers, you can integrate ActionCell into your project manually.
 
 ## Example
 
@@ -100,7 +100,7 @@ Open the example project, build and run.
 public protocol ActionCellDelegate: NSObjectProtocol {
 
     var tableView: UITableView! { get }
-    /// Do something when action is triggered
+    /// Do something when action triggered
     func didActionTriggered(cell: UITableViewCell, action: String)
 }
 ```
@@ -124,7 +124,7 @@ public protocol ActionSheetDelegate: NSObjectProtocol {
 
 ## Usage
 
-* Implement ActionCellDelegate
+* ActionCellDelegate
 
 ```swift
 extension ViewController: ActionCellDelegate {
@@ -207,8 +207,19 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 }
 ```
 
+! CAUTION : To make UITableViewCell work properly on reuse, you should override the prepareForReuse method, and call clearActionsheet method:
+
+```swift
+override func prepareForReuse() {
+        super.prepareForReuse()
+
+        clearActionsheet() // remove actionCell view from cell
+    }
+```
+
+
 ### Inherit ActionControl [Optional]
-IconAction, TextAction & IconTextAction are already implemented, you can use it straightforwardly, or you can choose to implement ActionControlDelegate to create your own ActionControl.
+IconAction, TextAction & IconTextAction are already implemented, you can use it straightforwardly, or you can choose to use ActionControlDelegate to create your own ActionControl.
 
 ## Properties & Methods
 
@@ -216,8 +227,8 @@ IconAction, TextAction & IconTextAction are already implemented, you can use it 
 ```swift
 var animationStyle: AnimationStyle = ladder | ladder_emergence | concurrent // Action animation style
 var animationDuration: TimeInterval = 0.3 // duration of the animation
-var enableDefaultAction: Bool // Enable default action to be triggered when the content is panned to far enough, if true, the first action (on left: the leftest one, on right: the rightest one) will be the default action.
-var defaultActionTriggerPropotion: CGFloat // The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action is triggered
+var enableDefaultAction: Bool // Enable default action trigger when the content panned to far enough, if true, the first action (on left: the leftest one, on right: the rightest one) will be the default action.
+var defaultActionTriggerPropotion: CGFloat // The propotion of (state public to state trigger-prepare / state public to state trigger), about where the default action triggered
 
 func wrap(cell target: UITableViewCell, actionsLeft: [ActionControl] = [], actionsRight: [ActionControl] = [])
 ```

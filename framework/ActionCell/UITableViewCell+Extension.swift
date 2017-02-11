@@ -48,6 +48,10 @@ extension UITableViewCell: ActionsheetDelegate {
     public func closeActionsheet(_ completionHandler: (() -> ())? = nil) {
         actionCell?.closeActionsheet(completionHandler)
     }
+    
+    public func clearActionsheet() {
+        actionCell?.removeFromSuperview()
+    }
 }
 
 extension UITableViewCell {
