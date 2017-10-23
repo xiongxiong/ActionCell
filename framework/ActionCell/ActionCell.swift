@@ -566,7 +566,7 @@ open class ActionCell: UIView {
     }
     
     // MARK: Handle Gestures
-    func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
+    @objc func handleSwipeGestureRecognizer(_ gestureRecognizer: UISwipeGestureRecognizer) {
         #if DEVELOPMENT
             print("\(#function) -- " + "")
         #endif
@@ -597,7 +597,7 @@ open class ActionCell: UIView {
         }
     }
     
-    func handlePanGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc func handlePanGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
         #if DEVELOPMENT
             print("\(#function) -- " + "")
         #endif
@@ -668,7 +668,7 @@ open class ActionCell: UIView {
         }
     }
     
-    func handleTempTapGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
+    @objc func handleTempTapGestureRecognizer(_ gestureRecognizer: UIPanGestureRecognizer) {
         #if DEVELOPMENT
             print("\(#function) -- " + "")
         #endif
