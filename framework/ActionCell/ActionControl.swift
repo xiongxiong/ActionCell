@@ -39,7 +39,7 @@ open class ActionControl: UIControl {
     }
     
     /// Action is triggered
-    func actionTriggered() {
+    @objc func actionTriggered() {
         #if DEVELOPMENT
             print("\(#function) -- " + "action: \(action)")
         #endif
